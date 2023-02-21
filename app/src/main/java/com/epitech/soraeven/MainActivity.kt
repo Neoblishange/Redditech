@@ -81,7 +81,8 @@ class MainActivity : AppCompatActivity() {
                     ) {
                         Toast.makeText(this@MainActivity,
                             "Yeah!", Toast.LENGTH_SHORT).show()
-                        println(code)
+                        // We can retrieve the access token by doing response.body()?.getAccessToken()
+                        println(response.body()?.getAccessToken())
                     }
                 })
             }

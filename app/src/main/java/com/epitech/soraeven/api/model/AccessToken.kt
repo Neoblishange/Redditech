@@ -16,4 +16,11 @@ class AccessToken {
     fun getTokenType(): String? {
         return tokenType
     }
+
+    @SerializedName("refresh_token")
+    private var refreshToken: String? = null
+
+    fun getRefreshToken(): String? {
+        return refreshToken
+    }
 }
