@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Soraeven</string>
+    <string name="landing_text">Coucou!</string>
+    <string name="redirect_button_text">Navigate</string>
+    <string name="redirect_button_to_home">Navigate to home</string>
+    <string name="login_button_text">Connect me!</string>
 </resources>
