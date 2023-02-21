@@ -20,6 +20,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!--Test if I can land in LandingActivity-->
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -27,10 +29,20 @@
                 <data
                     android:host="oauth2redirect"
                     android:scheme="soraeven"/>
-
             </intent-filter>
+            -->
         </activity>
-        <activity android:name=".LandingActivity">
+        <activity
+            android:name=".LandingActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="oauth2redirect"
+                    android:scheme="soraeven"/>
+            </intent-filter>
         </activity>
     </application>
 
