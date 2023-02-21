@@ -19,14 +19,14 @@ class LandingActivity : AppCompatActivity() {
     private val clientId = "DmJqy_hwmMfuC0b1YMn43g"
     private val redirectUri = Uri.parse("soraeven://oauth2redirect")
     private lateinit var mNavigateHomeButton: Button
-
+    private val intent = Intent(this@LandingActivity, MainActivity::class.java)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing)
 
         mNavigateHomeButton = findViewById<Button>(R.id.redirectButtonToHome)
         mNavigateHomeButton.setOnClickListener {
-            val intent = Intent(this@LandingActivity, MainActivity::class.java)
+            //val intent = Intent(this@LandingActivity, MainActivity::class.java)
             startActivity(intent)
         }
     }
