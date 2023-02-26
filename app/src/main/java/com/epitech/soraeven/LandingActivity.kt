@@ -1,5 +1,6 @@
 package com.epitech.soraeven
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -64,6 +65,16 @@ class LandingActivity : AppCompatActivity() {
                             "Yeah!", Toast.LENGTH_SHORT).show()
                         // We can retrieve the access token by doing response.body()?.getAccessToken()
                         println(response.body()?.getAccessToken())
+                        // Store the access key in the shared preferences
+                        val preferences = getSharedPreferences("my_app", Context.MODE_PRIVATE)
+                        val editor = preferences.edit()
+                        editor.putString("access_token", response.body()?.getAccessToken())
+                        editor.apply()
+                        /* To retrieve the access key :
+                        * val preferences = getSharedPreferences("my_app", Context.MODE_PRIVATE)
+                        * val accessToken = preferences.getString("access_token", null)
+                        * */
+
                     }
                 })
             }
