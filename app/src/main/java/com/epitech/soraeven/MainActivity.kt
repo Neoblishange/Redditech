@@ -9,7 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
     private lateinit var mLoginButton: Button
     private lateinit var mRedirectButton: Button
+    // Right clientId
     private val clientId = "DmJqy_hwmMfuC0b1YMn43g"
+    // Test clientId
+    // private val clientId = "NXr5v260lGrah-KD6xWCsw"
     @Suppress("SpellCheckingInspection")
     private val redirectUri = Uri.parse("soraeven://oauth2redirect")
     private val scopes = "account identity modconfig read save mysubreddits subscribe vote"
