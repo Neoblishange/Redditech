@@ -17,7 +17,10 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class LandingActivity : AppCompatActivity() {
+    // Right clientId
     private val clientId = "DmJqy_hwmMfuC0b1YMn43g"
+    // Test clientId
+    // private val clientId = "NXr5v260lGrah-KD6xWCsw"
     private val redirectUri = Uri.parse("soraeven://oauth2redirect")
     private lateinit var mNavigateHomeButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +50,9 @@ class LandingActivity : AppCompatActivity() {
             val credentials: String = Credentials.basic(clientId, "")
             val accessTokenCall: Call<AccessToken?>? =
                 code?.let {
-                    client.getAccessToken(credentials, "authorization_code", redirectUri.toString(),
+                    client.getAccessToken(credentials,
+                        "authorization_code",
+                        redirectUri.toString(),
                         it
                     )
                 }
@@ -74,7 +79,6 @@ class LandingActivity : AppCompatActivity() {
                         * val preferences = getSharedPreferences("my_app", Context.MODE_PRIVATE)
                         * val accessToken = preferences.getString("access_token", null)
                         * */
-
                     }
                 })
             }

@@ -20,21 +20,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!--Test if I can land in LandingActivity-->
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data
-                    android:host="oauth2redirect"
-                    android:scheme="soraeven"/>
-            </intent-filter>
-            -->
         </activity>
         <activity
             android:name=".LandingActivity"
             android:exported="true">
+            <!--Land in LandingActivity when returning from OAuth2 web view-->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -44,6 +34,12 @@
                     android:scheme="soraeven"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".UserSettingsActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>
