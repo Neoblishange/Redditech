@@ -4,4 +4,15 @@
     <string name="redirect_button_text">Navigate</string>
     <string name="redirect_button_to_home">Navigate to home</string>
     <string name="login_button_text">Connect me!</string>
+    <string name="user_settings">User settings</string>
+    <string name="display_language_text">Display language</string>
+    <string name="u_username">u/Username</string>
+    <string name="display_name">Displayname (Example)</string>
+    <string name="selected_language_text">(Example)</string>
+    <string name="allow_follower_text">Allow people to follow you</string>
+    <string name="nsfw_text">NSFW</string>
+    <string name="hide_ads_text">Hide ads</string>
+    <string name="active_in_communities_text">Active in communities visibility</string>
+    <string name="autoplay_videos_text">Autoplay videos</string>
+    <string name="user_s_avatar_content_description">User\'s avatar</string>
 </resources>
