@@ -15,4 +15,5 @@
     <string name="active_in_communities_text">Active in communities visibility</string>
     <string name="autoplay_videos_text">Autoplay videos</string>
     <string name="user_s_avatar_content_description">User\'s avatar</string>
+    <string name="user_profile_description_text">A random description about a Reddit user...</string>
 </resources>
