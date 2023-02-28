@@ -5,6 +5,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.epitech.soraeven.api.model.PostSearch
+import com.epitech.soraeven.api.service.AuthInterceptor
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mLoginButton: Button
@@ -37,4 +46,20 @@ class MainActivity : AppCompatActivity() {
             startActivity(i)
         }
     }
+
+    val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(AuthInterceptor(authToken = String()))
+        .build()
+
+    val retrofit = Retrofit.Builder()
+        .baseUrl("")
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val PostReasearch = retrofit.create(PostSearch::class.java)
+
+
+
+
 }
