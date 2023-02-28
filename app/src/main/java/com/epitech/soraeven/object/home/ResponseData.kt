@@ -1,7 +1,10 @@
-package com.epitech.soraeven.home;
+package com.epitech.soraeven.`object`.home;
 
 import com.google.gson.annotations.SerializedName
 
+data class ResponseData (
+    var data: DataPostResult
+            )
 data class DataPostResult(
     var children: Array<ChildrenPostData>
     )
