@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
     private val clientId = "DmJqy_hwmMfuC0b1YMn43g"
     @Suppress("SpellCheckingInspection")
     private val redirectUri = Uri.parse("soraeven://oauth2redirect")
-    private val scopes = "account modconfig read save mysubreddits subscribe vote"
+    private val scopes = "account identity modconfig read save mysubreddits subscribe vote"
     private val authUrl = Uri.parse("https://www.reddit.com/api/v1/authorize.compact" +
             "?client_id=$clientId" +
             "&response_type=code" +

@@ -17,5 +17,4 @@ interface RedditClient {
                        @Field("grant_type") grantType: String,
                        @Field("redirect_uri") redirectUri: String,
                        @Field("code") code: String): Call<AccessToken?>?
-
 }
