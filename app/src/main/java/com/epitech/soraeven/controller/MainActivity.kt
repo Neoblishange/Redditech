@@ -1,10 +1,11 @@
-package com.epitech.soraeven
+package com.epitech.soraeven.controller
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.epitech.soraeven.R
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mLoginButton: Button

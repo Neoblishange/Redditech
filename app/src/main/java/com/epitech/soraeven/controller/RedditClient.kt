@@ -1,13 +1,9 @@
-package com.epitech.soraeven.api.service
+package com.epitech.soraeven.controller
 
-import com.epitech.soraeven.api.model.AccessToken
-import okhttp3.Credentials
+import com.epitech.soraeven.model.AccessToken
+import com.epitech.soraeven.model.DataPostResult
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.Header
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface RedditClient {
     @Headers("Accept: application/json")
@@ -17,4 +13,11 @@ interface RedditClient {
                        @Field("grant_type") grantType: String,
                        @Field("redirect_uri") redirectUri: String,
                        @Field("code") code: String): Call<AccessToken?>?
+
+    @Headers("Accept: application/json")
+    @GET("{filter}")
+    fun getFilteredPost(
+        @Path("filter") filter: String,
+        @Query("limit") limit: String,
+        @Header("Authorization") authHeader: String): Call<DataPostResult?>?
 }
