@@ -40,6 +40,23 @@
         <activity
             android:name=".controller.UserSettingsActivity"
             android:exported="true"/>
+        <activity
+            android:name=".Home"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustResize">
+        </activity>
+        <activity
+            android:name=".Profile"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".Subreddit"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".PostAndComments"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
