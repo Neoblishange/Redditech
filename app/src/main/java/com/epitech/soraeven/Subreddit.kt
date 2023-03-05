@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.epitech.soraeven.controller.HomeActivity
 
 class Subreddit : AppCompatActivity() {
     private lateinit var homeButton: Button
@@ -37,7 +38,7 @@ class Subreddit : AppCompatActivity() {
 
         homeButton = findViewById(R.id.homeButton)
         homeButton.setOnClickListener {
-            val intent = Intent(this@Subreddit, Home::class.java)
+            val intent = Intent(this@Subreddit, HomeActivity::class.java)
             startActivity(intent)
         }
 

@@ -47,7 +47,7 @@ class LandingActivity : AppCompatActivity() {
 
             val retrofit: Retrofit = builder.build()
 
-            val client = retrofit.create(RedditClient::class.java)
+            val client = retrofit.create(RedditInterface::class.java)
             val credentials: String = Credentials.basic(clientId, "")
             val accessTokenCall: Call<AccessToken?>? =
                 code?.let {
@@ -101,10 +101,10 @@ class LandingActivity : AppCompatActivity() {
             /*.client(interceptorClient)*/ //this line added
             .addConverterFactory(GsonConverterFactory.create(/*gson*/))
         val retrofit: Retrofit = builder.build()
-        val client = retrofit.create(RedditClient::class.java)
+        val client = retrofit.create(RedditInterface::class.java)
         val preferences = getSharedPreferences("my_app", Context.MODE_PRIVATE)
         val accessToken = preferences.getString("access_token", null)
-        client.getFilteredPost("hot", "3", "bearer " + accessToken)
+        client.getFilteredPost("hot", "3")
             ?.enqueue(object : Callback<DataPostResult?> {
                 override fun onFailure(call: Call<DataPostResult?>, t: Throwable) {
                     Toast.makeText(

@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -24,15 +25,7 @@
         <activity
             android:name=".controller.LandingActivity"
             android:exported="true">
-            <!--Land in LandingActivity when returning from OAuth2 web view-->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data
-                    android:host="oauth2redirect"
-                    android:scheme="soraeven"/>
-            </intent-filter>
+            <!--I will probably delete this in the future-->
         </activity>
         <activity
             android:name=".controller.ProfileActivity"
@@ -41,9 +34,17 @@
             android:name=".controller.UserSettingsActivity"
             android:exported="true"/>
         <activity
-            android:name=".Home"
+            android:name=".controller.HomeActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan|adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="oauth2redirect"
+                    android:scheme="soraeven"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".Profile"
