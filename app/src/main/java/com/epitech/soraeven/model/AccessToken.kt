@@ -1,4 +1,4 @@
-package com.epitech.soraeven.api.model
+package com.epitech.soraeven.model
 
 import com.google.gson.annotations.SerializedName
 

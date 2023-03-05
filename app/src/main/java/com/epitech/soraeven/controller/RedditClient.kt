@@ -1,8 +1,7 @@
-package com.epitech.soraeven.api.service
+package com.epitech.soraeven.controller
 
-import com.epitech.soraeven.api.model.AccessToken
-import com.epitech.soraeven.api.model.DataPostResult
-import okhttp3.Credentials
+import com.epitech.soraeven.model.AccessToken
+import com.epitech.soraeven.model.DataPostResult
 import retrofit2.Call
 import retrofit2.http.*
 

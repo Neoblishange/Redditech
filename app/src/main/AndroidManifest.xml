@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Soraeven"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".controller.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LandingActivity"
+            android:name=".controller.LandingActivity"
             android:exported="true">
             <!--Land in LandingActivity when returning from OAuth2 web view-->
             <intent-filter>
@@ -35,10 +35,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ProfileActivity"
+            android:name=".controller.ProfileActivity"
             android:exported="true"/>
         <activity
-            android:name=".UserSettingsActivity"
+            android:name=".controller.UserSettingsActivity"
             android:exported="true"/>
     </application>
 
