@@ -2,7 +2,7 @@ package com.epitech.soraeven.`object`.home;
 
 import com.google.gson.annotations.SerializedName
 
-data class ResponseData (
+data class Response (
     var data: DataPostResult
             )
 data class DataPostResult(
