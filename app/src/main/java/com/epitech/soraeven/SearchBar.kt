@@ -27,6 +27,7 @@ class SearchBar (private val context: Context){
                 mapFilterButton[buttonFilter.key] = true
                 mapFilterButton.keys.filter { it != buttonFilter.key }
                     .forEach {
+                        println("COLOR : " + it)
                         mapFilterButton[it] = false
                         it.backgroundTintList =
                             ColorStateList.valueOf(ContextCompat.getColor(
