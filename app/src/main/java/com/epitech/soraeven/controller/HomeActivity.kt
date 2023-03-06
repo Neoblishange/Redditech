@@ -18,6 +18,7 @@ import com.epitech.soraeven.model.DataPostResult
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 // import kotlin.reflect.typeOf
 
 
@@ -34,6 +35,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var newButtonFilter: Button
     private lateinit var topButtonFilter: Button
 
+    private lateinit var footerView: View
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,30 +50,24 @@ class HomeActivity : AppCompatActivity() {
         searchBar = SearchBar(this)
         searchBar.setupFilterButtons(
             bestButtonFilter, hotButtonFilter,
-            newButtonFilter, topButtonFilter)
+            newButtonFilter, topButtonFilter
+        )
 
-        profileButton = findViewById(R.id.profileButton)
-        profileButton.setOnClickListener {
-            val intent = Intent(this@HomeActivity, Profile::class.java)
-            startActivity(intent)
-        }
-        bestButtonFilter.setOnClickListener{RedditClient.getFilteredPost("best", 3, object : Callback<DataPostResult?> {
-            override fun onFailure(call: Call<DataPostResult?>, t: Throwable) {
-                // Handle the failure case
-            }
+        val footer = Footer()
+        footer.setupFooter(this@HomeActivity)
 
-            override fun onResponse(call: Call<DataPostResult?>, response: Response<DataPostResult?>) {
-                // Handle the success case
-                val responseData: DataPostResult? = response.body()
-                println(responseData)
-            }
-        })
-        }
+        bestButtonFilter.setOnClickListener {
+            RedditClient.getFilteredPost("best", 3, object : Callback<DataPostResult?> {
+                override fun onFailure(call: Call<DataPostResult?>, t: Throwable) {
+                    // Handle the failure case
+                }
 
-        homeButton = findViewById(R.id.homeButton)
-        homeButton.setOnClickListener {
-            val intent = Intent(this@HomeActivity, HomeActivity::class.java)
-            startActivity(intent)
+                override fun onResponse(call: Call<DataPostResult?>, response: Response<DataPostResult?>) {
+                    // Handle the success case
+                    val responseData: DataPostResult? = response.body()
+                    println(responseData)
+                }
+            })
         }
 
         allPostsContainer = findViewById(R.id.allPostsLayout)
@@ -102,6 +99,7 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun displayPost(numberOfViews: Int, container: ViewGroup) {
         for (i in 0 until numberOfViews) {
             val view = LayoutInflater.from(container.context)
@@ -111,7 +109,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun joinSubreddit(){
+    private fun joinSubreddit() {
 
     }
 
