@@ -1,4 +1,4 @@
-package com.epitech.soraeven.`object`.profil
+package com.epitech.soraeven.model.profil
 
 data class ProfilUser(
     var name: String,

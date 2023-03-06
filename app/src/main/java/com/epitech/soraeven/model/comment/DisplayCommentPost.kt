@@ -1,4 +1,4 @@
-package com.epitech.soraeven.`object`.comment
+package com.epitech.soraeven.model.comment
 
 data class CommentPost(
     var data: DisplayCommentPostData

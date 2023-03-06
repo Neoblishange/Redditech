@@ -1,4 +1,4 @@
-package com.epitech.soraeven.`object`.subreddit
+package com.epitech.soraeven.model.subreddit
 
 data class DisplayInfoSubreddit(
     var data : DataDisplayInfo
