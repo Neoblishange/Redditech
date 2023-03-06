@@ -1,23 +1,53 @@
 package com.epitech.soraeven.controller
 
-import com.epitech.soraeven.model.AccessToken
+import android.content.Context
+import com.epitech.soraeven.MyApplication
 import com.epitech.soraeven.model.DataPostResult
-import retrofit2.Call
-import retrofit2.http.*
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import retrofit2.Callback
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-interface RedditClient {
-    @Headers("Accept: application/json")
-    @FormUrlEncoded
-    @POST("access_token")
-    fun getAccessToken(@Header("Authorization") credentials: String,
-                       @Field("grant_type") grantType: String,
-                       @Field("redirect_uri") redirectUri: String,
-                       @Field("code") code: String): Call<AccessToken?>?
+object RedditClient {
+    private var retrofit: Retrofit? = null
+    private const val BASE_URL = "https://oauth.reddit.com"
+    private val accessTokenInterceptor = Interceptor { chain ->
+        val originalRequest = chain.request()
+        val accessToken = getAccessToken()
+        if (accessToken != null) {
+            val modifiedRequest = originalRequest.newBuilder()
+                .header("Authorization", "Bearer $accessToken")
+                .build()
+            chain.proceed(modifiedRequest)
+        } else {
+            chain.proceed(originalRequest)
+        }
+    }
+    private val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(accessTokenInterceptor)
+        .build()
+    private fun getAccessToken(): String? {
+        // Retrieve the access token from SharedPreferences
+        val preferences = MyApplication.staticContext?.getSharedPreferences("my_app", Context.MODE_PRIVATE)
+        return preferences?.getString("access_token", null)
+    }
 
-    @Headers("Accept: application/json")
-    @GET("{filter}")
-    fun getFilteredPost(
-        @Path("filter") filter: String,
-        @Query("limit") limit: String,
-        @Header("Authorization") authHeader: String): Call<DataPostResult?>?
+    private val client: RedditInterface
+        get() {
+            if (retrofit == null) {
+                retrofit = Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+            }
+            return retrofit!!.create(RedditInterface::class.java)
+        }
+
+    fun getFilteredPost(filter: String, limit: Int, callback: Callback<DataPostResult?>) {
+        client.getFilteredPost(filter, limit.toString())
+            ?.enqueue(callback)
+    }
+
 }
