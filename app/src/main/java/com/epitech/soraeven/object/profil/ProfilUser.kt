@@ -6,10 +6,10 @@ data class ProfilUser(
 )
 
 data class SubredditProfilUser(
-    var subreddit_type: ??,
+    var subreddit_type: String,
     var title: String,
     var public_description: String,
     var banner_img: String,
     var icon_img: String,
-    var created_utc: ??
+    var created_utc: Int
 )
