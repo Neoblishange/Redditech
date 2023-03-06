@@ -3,6 +3,7 @@ package com.epitech.soraeven.controller
 import android.content.Context
 import com.epitech.soraeven.MyApplication
 import com.epitech.soraeven.model.DataPostResult
+import com.epitech.soraeven.model.profil.UserSettings
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Callback
@@ -49,5 +50,7 @@ object RedditClient {
         client.getFilteredPost(filter, limit.toString())
             ?.enqueue(callback)
     }
-
+      fun getUserSettings(callback: Callback<UserSettings?>) {
+        client.getUserSettings()?.enqueue(callback)
+    }
 }

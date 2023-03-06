@@ -34,7 +34,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var newButtonFilter: Button
     private lateinit var topButtonFilter: Button
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -54,7 +53,8 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this@HomeActivity, Profile::class.java)
             startActivity(intent)
         }
-        bestButtonFilter.setOnClickListener{RedditClient.getFilteredPost("best", 3, object : Callback<DataPostResult?> {
+        bestButtonFilter.setOnClickListener{RedditClient.getFilteredPost(
+            "best", 3, object : Callback<DataPostResult?> {
             override fun onFailure(call: Call<DataPostResult?>, t: Throwable) {
                 // Handle the failure case
             }
@@ -83,7 +83,6 @@ class HomeActivity : AppCompatActivity() {
                     val intent = Intent(this@HomeActivity, Subreddit::class.java)
                     startActivity(intent)
                 }
-
                 view.findViewById<View>(R.id.headerPost).setOnClickListener {
                     val intent = Intent(this@HomeActivity, PostAndComments::class.java)
                     startActivity(intent)

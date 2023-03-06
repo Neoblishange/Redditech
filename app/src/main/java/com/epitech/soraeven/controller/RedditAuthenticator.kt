@@ -44,7 +44,6 @@ class RedditAuthenticator(private val context: Context) {
                     val editor = preferences.edit()
                     editor.putString("access_token", accessToken)
                     editor.apply()
-
                 }
             }
         })

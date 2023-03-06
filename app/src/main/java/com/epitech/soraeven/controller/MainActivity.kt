@@ -34,11 +34,5 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW, authUrl)
             startActivity(intent)
         }
-
-        mRedirectButton = findViewById(R.id.redirectButton)
-        mRedirectButton.setOnClickListener {
-            val i = Intent(this@MainActivity, LandingActivity::class.java)
-            startActivity(i)
-        }
     }
 }
