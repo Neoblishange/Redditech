@@ -1,5 +1,6 @@
 package com.epitech.soraeven
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,9 @@ class Profile : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        //mUserSettingsImage = findViewById(settings_icon)
+        mUserSettingsImage = findViewById(R.id.settings_icon)
+        mUserSettingsImage.setOnClickListener{
+            val intent: Intent =
+        }
     }
 }
