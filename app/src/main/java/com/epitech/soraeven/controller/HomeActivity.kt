@@ -18,8 +18,6 @@ import com.epitech.soraeven.model.PostList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-// import kotlin.reflect.typeOf
-
 
 class HomeActivity : AppCompatActivity() {
     private val redirectUri = Uri.parse("soraeven://oauth2redirect")

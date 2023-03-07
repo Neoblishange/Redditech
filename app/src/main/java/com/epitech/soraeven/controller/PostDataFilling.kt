@@ -1,8 +1,6 @@
 package com.epitech.soraeven.controller
 
-import android.app.Activity
 import android.content.Context
-import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
