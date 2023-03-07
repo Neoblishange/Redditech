@@ -2,7 +2,7 @@ package com.epitech.soraeven.controller
 
 import android.content.Context
 import com.epitech.soraeven.MyApplication
-import com.epitech.soraeven.model.DataPostResult
+import com.epitech.soraeven.model.PostList
 import com.epitech.soraeven.model.profil.ProfilUser
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -46,7 +46,7 @@ object RedditClient {
             return retrofit!!.create(RedditInterface::class.java)
         }
 
-    fun getFilteredPost(filter: String, limit: Int, callback: Callback<DataPostResult?>) {
+    fun getFilteredPost(filter: String, limit: Int, callback: Callback<PostList?>) {
         client.getFilteredPost(filter, limit.toString())
             ?.enqueue(callback)
     }

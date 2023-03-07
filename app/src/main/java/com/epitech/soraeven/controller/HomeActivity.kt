@@ -14,11 +14,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.epitech.soraeven.*
-import com.epitech.soraeven.model.DataPostResult
+import com.epitech.soraeven.model.PostList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
 // import kotlin.reflect.typeOf
 
 
@@ -35,6 +34,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var newButtonFilter: Button
     private lateinit var topButtonFilter: Button
 
+    private lateinit var postReddit : Array<PostList.DataPostList.ChildrenPost>
+
+
     private lateinit var footerView: View
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -50,28 +52,19 @@ class HomeActivity : AppCompatActivity() {
         searchBar = SearchBar(this)
         searchBar.setupFilterButtons(
             bestButtonFilter, hotButtonFilter,
-            newButtonFilter, topButtonFilter
-        )
+            newButtonFilter, topButtonFilter)
 
         val footer = Footer()
         footer.setupFooter(this@HomeActivity)
 
-        bestButtonFilter.setOnClickListener {
-            RedditClient.getFilteredPost("best", 3, object : Callback<DataPostResult?> {
-                override fun onFailure(call: Call<DataPostResult?>, t: Throwable) {
-                    // Handle the failure case
-                }
-
-                override fun onResponse(call: Call<DataPostResult?>, response: Response<DataPostResult?>) {
-                    // Handle the success case
-                    val responseData: DataPostResult? = response.body()
-                    println(responseData)
-                }
-            })
+        homeButton = findViewById(R.id.homeButton)
+        homeButton.setOnClickListener {
+            val intent = Intent(this@HomeActivity, HomeActivity::class.java)
+            startActivity(intent)
         }
 
         allPostsContainer = findViewById(R.id.allPostsLayout)
-        displayPost(5, allPostsContainer)
+        displayPost(5, allPostsContainer, "best")
 
         homePage = findViewById<ConstraintLayout>(R.id.homePage)
         getViewsByTag(homePage, "community_icon")
@@ -99,14 +92,26 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
+    private fun displayPost(numberOfViews: Int, container: ViewGroup , filter: String) {
+        RedditClient.getFilteredPost(filter, 10, object : Callback<PostList?> {
+            override fun onFailure(call: Call<PostList?>, t: Throwable) {
+                // Handle the failure case
+            }
 
-    private fun displayPost(numberOfViews: Int, container: ViewGroup) {
-        for (i in 0 until numberOfViews) {
-            val view = LayoutInflater.from(container.context)
-                .inflate(R.layout.post, container, false)
-            view.tag = "community_icon"
-            container.addView(view)
-        }
+            override fun onResponse(call: Call<PostList?>, response: Response<PostList?>) {
+                // Handle the success case
+                val responseData: PostList? = response.body()
+                postReddit = responseData?.data?.children!!
+                println(responseData?.data?.children?.size)
+                for (i in 0 until postReddit?.size as Int) {
+                    val view = LayoutInflater.from(container.context)
+                        .inflate(R.layout.post, container, false)
+                    view.tag = "community_icon"
+                    container.addView(view)
+                    PostDataFilling.fillPost(view, postReddit[i].data)
+                }
+            }
+        })
     }
 
     private fun joinSubreddit() {
