@@ -24,7 +24,8 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var settingsUserName: TextView
     private lateinit var userProfileDescriptionTextView: TextView
     private lateinit var iconImg: ImageView
-    private lateinit var displayProfile: ConstraintLayout
+    private lateinit var imagesProfile: ConstraintLayout
+    private lateinit var usernamesProfile: ConstraintLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +48,8 @@ class ProfileActivity : AppCompatActivity() {
         settingsUserName = findViewById(R.id.settings_user_name)
         userProfileDescriptionTextView = findViewById(R.id.user_profile_description_text_view)
         iconImg = findViewById(R.id.icon_img)
-        displayProfile = findViewById(R.id.displayProfile)
+        imagesProfile = findViewById(R.id.imagesProfile)
+        usernamesProfile = findViewById(R.id.usernamesProfile)
 
         //profile infos
         RedditClient.getProfile(object : Callback<ProfilUser?> {
@@ -64,7 +66,7 @@ class ProfileActivity : AppCompatActivity() {
                 //images
                 val imageLoading = ImageLoading()
                 imageLoading.simpleImageViewIntegration(this@ProfileActivity, responseData?.subreddit?.icon_img, iconImg)
-                imageLoading.customViewIntegration(this@ProfileActivity, responseData?.subreddit?.banner_img, displayProfile)
+                imageLoading.customViewIntegration(this@ProfileActivity, responseData?.subreddit?.banner_img, imagesProfile)
             }
 
             override fun onFailure(call: Call<ProfilUser?>, t: Throwable) {
