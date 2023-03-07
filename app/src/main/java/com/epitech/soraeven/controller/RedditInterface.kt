@@ -15,13 +15,13 @@ interface RedditInterface {
                        @Field("redirect_uri") redirectUri: String,
                        @Field("code") code: String): Call<AccessToken?>?
 
+
     @Headers("Accept: application/json")
     @GET("{filter}")
     fun getFilteredPost(
         @Path("filter") filter: String,
         @Query("limit") limit: String): Call<DataPostResult?>?
-
     @Headers("Accept: application/json")
     @GET("/api/v1/me/prefs")
-    fun getUserSettings(): Call<UserSettings?>?
+    fun getUserSettings(): Call<UserSettings>
 }

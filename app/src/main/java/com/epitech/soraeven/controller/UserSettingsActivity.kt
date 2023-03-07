@@ -52,60 +52,81 @@ class UserSettingsActivity : AppCompatActivity(), View.OnClickListener {
 
         getUserPreferences()
         if(!mUserSettingsAreFetched) {
-            RedditClient.getUserSettings(object : Callback<UserSettings?> {
-                override fun onFailure(call: Call<UserSettings?>, t: Throwable) {
-                    Toast.makeText(this@UserSettingsActivity, "Problem in fetch!", Toast.LENGTH_SHORT).show()
-                }
-                override fun onResponse(call: Call<UserSettings?>, response: Response<UserSettings?>) {
-                    mUserSettings = response.body()
-                    mUserSettings?.let { saveUserPreferences(it) }
-                }
-            })
-        }
-        setUserSettings()
+            fetchAndSetUserSettings()
+        } else mUserSettings?.let { setUserSettings(it) }
     }
 
-    private fun setUserSettings() {
-        mDisplayLanguage.text = mUserSettings!!.lang
-        mEnableFollowers.isChecked = mUserSettings!!.enableFollowers
-        mNoProfanity.isChecked = mUserSettings!!.noProfanity
-        mHideAds.isChecked = mUserSettings!!.hideAds
-        mActiveInCommunities.isChecked = mUserSettings!!.activeInCommunities
-        mAutoplayVideos.isChecked = mUserSettings!!.videoAutoplay
+    private fun fetchAndSetUserSettings() {
+        RedditClient.getUserSettings(object : Callback<UserSettings?> {
+            override fun onFailure(call: Call<UserSettings?>, t: Throwable) {
+                Toast.makeText(this@UserSettingsActivity, "Problem in fetch!", Toast.LENGTH_SHORT).show()
+            }
+            override fun onResponse(call: Call<UserSettings?>, response: Response<UserSettings?>) {
+                val responseUserSettings = response.body()
+                responseUserSettings?.let { saveUserPreferences(it) }
+                if (responseUserSettings != null) {
+                    setUserSettings(responseUserSettings)
+                }
+            }
+        })
+    }
+
+    private fun setUserSettings(userSettings: UserSettings) {
+        mDisplayLanguage.text = userSettings.lang
+        mEnableFollowers.isChecked = userSettings.enableFollowers
+        mNoProfanity.isChecked = userSettings.noProfanity
+        mHideAds.isChecked = userSettings.hideAds
+        mActiveInCommunities.isChecked = userSettings.activeInCommunities
+        mAutoplayVideos.isChecked = userSettings.videoAutoplay
     }
 
     private fun getUserPreferences() {
         val  userSettingsAreSaved = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
             .getBoolean(USER_PREFERENCES_ARE_SAVED, false)
         if (userSettingsAreSaved) {
+            mUserSettings = UserSettings(
+                getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
+                    .getString(USER_PREFERENCES_LANG, null).toString(),
+                getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
+                    .getString(USER_PREFERENCES_ENABLE_FOLLOWERS, null).toBoolean(),
+                getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
+                    .getString(USER_PREFERENCES_NO_PROFANITY, null).toBoolean(),
+                getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
+                    .getString(USER_PREFERENCES_HIDE_ADS, null).toBoolean(),
+                getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
+                    .getString(USER_PREFERENCES_TOP_KARMA, null).toBoolean(),
+                getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
+                    .getString(USER_PREFERENCES_VIDEO_AUTOPLAY, null).toBoolean()
+            )/*
             mUserSettings?.lang = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
                 .getString(USER_PREFERENCES_LANG, null).toString()
-            mUserSettings?.enableFollowers = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
+            mUserSettings.enableFollowers = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
                 .getString(USER_PREFERENCES_ENABLE_FOLLOWERS, null).toBoolean()
-            mUserSettings?.noProfanity = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
+            mUserSettings.noProfanity = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
                 .getString(USER_PREFERENCES_NO_PROFANITY, null).toBoolean()
-            mUserSettings?.hideAds = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
+            mUserSettings.hideAds = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
                 .getString(USER_PREFERENCES_HIDE_ADS, null).toBoolean()
-            mUserSettings?.activeInCommunities = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
+            mUserSettings.activeInCommunities = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
                 .getString(USER_PREFERENCES_TOP_KARMA, null).toBoolean()
-            mUserSettings?.videoAutoplay = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
-                .getString(USER_PREFERENCES_VIDEO_AUTOPLAY, null).toBoolean()
+            mUserSettings.videoAutoplay = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
+                .getString(USER_PREFERENCES_VIDEO_AUTOPLAY, null).toBoolean()*/
             mUserSettingsAreFetched = true
         }
     }
     private fun saveUserPreferences(userSettings: UserSettings) {
         getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE)
             .edit()
-            .putString(USER_PREFERENCES_LANG, mUserSettings?.lang)
+            .putString(USER_PREFERENCES_LANG, userSettings.lang)
             .putString(USER_PREFERENCES_ENABLE_FOLLOWERS,
-            mUserSettings?.enableFollowers.toString())
+                userSettings.enableFollowers.toString())
             .putString(USER_PREFERENCES_NO_PROFANITY,
-            mUserSettings?.noProfanity.toString())
-            .putString(USER_PREFERENCES_HIDE_ADS, mUserSettings?.hideAds.toString())
+                userSettings.noProfanity.toString())
+            .putString(USER_PREFERENCES_HIDE_ADS,
+                userSettings.hideAds.toString())
             .putString(USER_PREFERENCES_TOP_KARMA,
-            mUserSettings?.activeInCommunities.toString())
+                userSettings.activeInCommunities.toString())
             .putString(USER_PREFERENCES_VIDEO_AUTOPLAY,
-            mUserSettings?.videoAutoplay.toString())
+                userSettings.videoAutoplay.toString())
             .putBoolean(USER_PREFERENCES_ARE_SAVED, true)
             .apply()
     }
