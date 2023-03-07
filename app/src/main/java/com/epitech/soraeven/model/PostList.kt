@@ -16,7 +16,7 @@ data class PostList (
             data class ChildrenPostData(
                 var id: String,
                 var name: String,
-                @SerializedName("author_fullname")
+                @SerializedName("author")
                 var authorFullname: String,
                 var title: String,
                 var subreddit: String,
