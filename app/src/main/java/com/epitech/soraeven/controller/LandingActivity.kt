@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.epitech.soraeven.R
 import com.epitech.soraeven.model.AccessToken
-import com.epitech.soraeven.model.DataPostResult
+import com.epitech.soraeven.model.PostList
 import okhttp3.Credentials
 import retrofit2.Call
 import retrofit2.Callback
@@ -105,8 +105,8 @@ class LandingActivity : AppCompatActivity() {
         val preferences = getSharedPreferences("my_app", Context.MODE_PRIVATE)
         val accessToken = preferences.getString("access_token", null)
         client.getFilteredPost("hot", "3")
-            ?.enqueue(object : Callback<DataPostResult?> {
-                override fun onFailure(call: Call<DataPostResult?>, t: Throwable) {
+            ?.enqueue(object : Callback<PostList?> {
+                override fun onFailure(call: Call<PostList?>, t: Throwable) {
                     Toast.makeText(
                         this@LandingActivity,
                         "No!", Toast.LENGTH_SHORT
@@ -114,15 +114,15 @@ class LandingActivity : AppCompatActivity() {
                 }
 
                 override fun onResponse(
-                    call: Call<DataPostResult?>,
-                    response: Response<DataPostResult?>
+                    call: Call<PostList?>,
+                    response: Response<PostList?>
                 ) {
                     Toast.makeText(
                         this@LandingActivity,
                         "Yeah!", Toast.LENGTH_SHORT
                     ).show()
                     // We can retrieve the access token by doing response.body()?.getAccessToken()
-                    val responseData: DataPostResult? = response.body()
+                    val responseData: PostList? = response.body()
                     println(responseData)
                 }
             })
