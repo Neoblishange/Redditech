@@ -2,6 +2,7 @@ package com.epitech.soraeven.controller
 
 import com.epitech.soraeven.model.AccessToken
 import com.epitech.soraeven.model.DataPostResult
+import com.epitech.soraeven.model.profil.ProfilUser
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -19,4 +20,8 @@ interface RedditInterface {
     fun getFilteredPost(
         @Path("filter") filter: String,
         @Query("limit") limit: String): Call<DataPostResult?>?
+
+    @Headers("Accept: application/json")
+    @GET("api/v1/me")
+    fun getProfile(): Call<ProfilUser?>?
 }

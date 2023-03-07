@@ -26,6 +26,7 @@
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:id="@+id/icon_img"
                 android:contentDescription="@string/user_s_avatar_content_description"
                 android:scaleType="fitXY"/>
             <LinearLayout

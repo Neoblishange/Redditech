@@ -3,6 +3,7 @@ package com.epitech.soraeven.controller
 import android.content.Context
 import com.epitech.soraeven.MyApplication
 import com.epitech.soraeven.model.DataPostResult
+import com.epitech.soraeven.model.profil.ProfilUser
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Callback
@@ -50,4 +51,8 @@ object RedditClient {
             ?.enqueue(callback)
     }
 
+    fun getProfile(callback: Callback<ProfilUser?>){
+        client.getProfile()
+            ?.enqueue(callback)
+    }
 }
