@@ -24,7 +24,7 @@ interface RedditInterface {
     @Headers("Accept: application/json")
     @GET("/api/v1/me/prefs")
     fun getUserSettings(): Call<UserSettings>
-    @Headers("Accept: apllication/json")
+    @Headers("Accept: application/json")
     @PATCH("/api/v1/me/prefs")
-    fun setUserSettings(@Body userSettings: UserSettings)
+    fun setUserSettings(@Body userSettings: UserSettings): Call<UserSettings>
 }

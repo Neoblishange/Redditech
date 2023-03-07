@@ -50,7 +50,7 @@ class HomeActivity : AppCompatActivity() {
 
         profileButton = findViewById(R.id.profileButton)
         profileButton.setOnClickListener {
-            val intent = Intent(this@HomeActivity, Profile::class.java)
+            val intent = Intent(this@HomeActivity, ProfileActivity::class.java)
             startActivity(intent)
         }
         bestButtonFilter.setOnClickListener{RedditClient.getFilteredPost(

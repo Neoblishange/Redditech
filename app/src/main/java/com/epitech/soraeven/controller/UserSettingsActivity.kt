@@ -2,6 +2,7 @@ package com.epitech.soraeven.controller
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -62,13 +63,26 @@ class UserSettingsActivity : AppCompatActivity(), View.OnClickListener {
                 Toast.makeText(this@UserSettingsActivity, "Problem in fetch!", Toast.LENGTH_SHORT).show()
             }
             override fun onResponse(call: Call<UserSettings?>, response: Response<UserSettings?>) {
+                Toast.makeText(this@UserSettingsActivity, "Fetch successful!", Toast.LENGTH_SHORT).show()
                 val responseUserSettings = response.body()
                 responseUserSettings?.let { saveUserPreferences(it) }
                 if (responseUserSettings != null) {
                     setUserSettings(responseUserSettings)
+                    initializeMUserSettings(responseUserSettings)
                 }
             }
         })
+    }
+
+    private fun initializeMUserSettings(userSettings: UserSettings) {
+        mUserSettings = UserSettings(
+            userSettings.lang,
+            userSettings.enableFollowers,
+            userSettings.noProfanity,
+            userSettings.hideAds,
+            userSettings.activeInCommunities,
+            userSettings.videoAutoplay
+        )
     }
 
     private fun setUserSettings(userSettings: UserSettings) {
@@ -79,7 +93,6 @@ class UserSettingsActivity : AppCompatActivity(), View.OnClickListener {
         mActiveInCommunities.isChecked = userSettings.activeInCommunities
         mAutoplayVideos.isChecked = userSettings.videoAutoplay
     }
-
     private fun getUserPreferences() {
         val  userSettingsAreSaved = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
             .getBoolean(USER_PREFERENCES_ARE_SAVED, false)
@@ -88,28 +101,16 @@ class UserSettingsActivity : AppCompatActivity(), View.OnClickListener {
                 getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
                     .getString(USER_PREFERENCES_LANG, null).toString(),
                 getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
-                    .getString(USER_PREFERENCES_ENABLE_FOLLOWERS, null).toBoolean(),
+                    .getBoolean(USER_PREFERENCES_ENABLE_FOLLOWERS, false),
                 getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
-                    .getString(USER_PREFERENCES_NO_PROFANITY, null).toBoolean(),
+                    .getBoolean(USER_PREFERENCES_NO_PROFANITY, false),
                 getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
-                    .getString(USER_PREFERENCES_HIDE_ADS, null).toBoolean(),
+                    .getBoolean(USER_PREFERENCES_HIDE_ADS, false),
                 getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
-                    .getString(USER_PREFERENCES_TOP_KARMA, null).toBoolean(),
+                    .getBoolean(USER_PREFERENCES_TOP_KARMA, false),
                 getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
-                    .getString(USER_PREFERENCES_VIDEO_AUTOPLAY, null).toBoolean()
-            )/*
-            mUserSettings?.lang = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
-                .getString(USER_PREFERENCES_LANG, null).toString()
-            mUserSettings.enableFollowers = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
-                .getString(USER_PREFERENCES_ENABLE_FOLLOWERS, null).toBoolean()
-            mUserSettings.noProfanity = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
-                .getString(USER_PREFERENCES_NO_PROFANITY, null).toBoolean()
-            mUserSettings.hideAds = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
-                .getString(USER_PREFERENCES_HIDE_ADS, null).toBoolean()
-            mUserSettings.activeInCommunities = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
-                .getString(USER_PREFERENCES_TOP_KARMA, null).toBoolean()
-            mUserSettings.videoAutoplay = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE)
-                .getString(USER_PREFERENCES_VIDEO_AUTOPLAY, null).toBoolean()*/
+                    .getBoolean(USER_PREFERENCES_VIDEO_AUTOPLAY, false)
+            )
             mUserSettingsAreFetched = true
         }
     }
@@ -117,21 +118,69 @@ class UserSettingsActivity : AppCompatActivity(), View.OnClickListener {
         getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE)
             .edit()
             .putString(USER_PREFERENCES_LANG, userSettings.lang)
-            .putString(USER_PREFERENCES_ENABLE_FOLLOWERS,
-                userSettings.enableFollowers.toString())
-            .putString(USER_PREFERENCES_NO_PROFANITY,
-                userSettings.noProfanity.toString())
-            .putString(USER_PREFERENCES_HIDE_ADS,
-                userSettings.hideAds.toString())
-            .putString(USER_PREFERENCES_TOP_KARMA,
-                userSettings.activeInCommunities.toString())
-            .putString(USER_PREFERENCES_VIDEO_AUTOPLAY,
-                userSettings.videoAutoplay.toString())
+            .putBoolean(USER_PREFERENCES_ENABLE_FOLLOWERS,
+                userSettings.enableFollowers)
+            .putBoolean(USER_PREFERENCES_NO_PROFANITY,
+                userSettings.noProfanity)
+            .putBoolean(USER_PREFERENCES_HIDE_ADS,
+                userSettings.hideAds)
+            .putBoolean(USER_PREFERENCES_TOP_KARMA,
+                userSettings.activeInCommunities)
+            .putBoolean(USER_PREFERENCES_VIDEO_AUTOPLAY,
+                userSettings.videoAutoplay)
             .putBoolean(USER_PREFERENCES_ARE_SAVED, true)
             .apply()
     }
-
     override fun onClick(view: View?) {
-        Toast.makeText(this, view.toString(), Toast.LENGTH_SHORT).show()
+        Log.d("UPDATE_USER_SETTINGS", "In click event");
+        // Toast.makeText(this, view.toString(), Toast.LENGTH_SHORT).show()
+        if (view == mDisplayLanguage) {
+            // Do something
+        } else if (view == mEnableFollowers) {
+            Log.d("UPDATE_USER_SETTINGS", "In enableFollowers option");
+            updateUserBooleanPreference(mEnableFollowers, USER_PREFERENCES_ENABLE_FOLLOWERS)
+            mUserSettings?.enableFollowers = mEnableFollowers.isChecked
+        } else if (view == mNoProfanity) {
+            updateUserBooleanPreference(mNoProfanity, USER_PREFERENCES_NO_PROFANITY)
+            mUserSettings?.noProfanity = mNoProfanity.isChecked
+        } else if (view == mHideAds) {
+            updateUserBooleanPreference(mHideAds, USER_PREFERENCES_HIDE_ADS)
+            mUserSettings?.hideAds = mHideAds.isChecked
+        } else if (view == mActiveInCommunities) {
+            updateUserBooleanPreference(mActiveInCommunities, USER_PREFERENCES_TOP_KARMA)
+            mUserSettings?.activeInCommunities = mActiveInCommunities.isChecked
+        } else if (view == mAutoplayVideos) {
+            updateUserBooleanPreference(mAutoplayVideos, USER_PREFERENCES_VIDEO_AUTOPLAY)
+            mUserSettings?.videoAutoplay = mAutoplayVideos.isChecked
+        }
+        updateUserSettings()
+    }
+
+    private fun updateUserBooleanPreference(switch: SwitchCompat, userPreference: String) {
+        getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(userPreference, switch.isChecked)
+            .apply()
+    }
+
+    private fun updateUserSettings() {
+        Log.d("UPDATE_USER_SETTINGS", "In update method");
+        mUserSettings?.let {
+            RedditClient.setUserSettings(it, object : Callback<UserSettings?> {
+                override fun onResponse(
+                    call: Call<UserSettings?>,
+                    response: Response<UserSettings?>
+                ) {
+                    Toast.makeText(this@UserSettingsActivity, response.body().toString(), Toast.LENGTH_SHORT)
+                    println(response)
+                    Log.d("UPDATE_USER_SETTINGS", response.toString());
+                }
+                override fun onFailure(call: Call<UserSettings?>, t: Throwable) {
+                    Toast.makeText(this@UserSettingsActivity, "Failed", Toast.LENGTH_SHORT)
+                    Log.d("UPDATE_USER_SETTINGS", t.toString());
+                }
+
+            })
+        }
     }
 }

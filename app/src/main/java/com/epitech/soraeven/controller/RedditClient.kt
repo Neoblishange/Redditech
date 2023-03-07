@@ -50,7 +50,10 @@ object RedditClient {
         client.getFilteredPost(filter, limit.toString())
             ?.enqueue(callback)
     }
-      fun getUserSettings(callback: Callback<UserSettings?>) {
-        client.getUserSettings()?.enqueue(callback)
+    fun getUserSettings(callback: Callback<UserSettings?>) {
+        client.getUserSettings().enqueue(callback)
+    }
+    fun setUserSettings(userSettings: UserSettings, callback: Callback<UserSettings?>) {
+        client.setUserSettings(userSettings).enqueue(callback)
     }
 }
