@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.epitech.soraeven.Footer
 import com.epitech.soraeven.ImageLoading
 import com.epitech.soraeven.R
+import com.epitech.soraeven.model.PostList
 import com.epitech.soraeven.model.profil.ProfilUser
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,6 +28,8 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var imagesProfile: ConstraintLayout
     private lateinit var usernamesProfile: ConstraintLayout
 
+    private lateinit var postReddit : Array<PostList.DataPostList.ChildrenPost>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -41,7 +44,7 @@ class ProfileActivity : AppCompatActivity() {
         footer.setupFooter(this@ProfileActivity)
 
         allPostsContainer = findViewById(R.id.allPostsLayout)
-        displayPost(7, allPostsContainer)
+        displayPost(7, allPostsContainer, "new")
 
         //profile text views setup
         settingsDisplayName = findViewById(R.id.settings_display_name)
@@ -75,12 +78,27 @@ class ProfileActivity : AppCompatActivity() {
         })
     }
 
-    private fun displayPost(numberOfViews: Int, container: ViewGroup) {
-        for (i in 0 until numberOfViews) {
-            val view = LayoutInflater.from(container.context)
-                .inflate(R.layout.post, container, false)
-            view.tag = "community_icon"
-            container.addView(view)
-        }
+    private fun displayPost(numberOfViews: Int, container: ViewGroup , filter: String) {
+
+        RedditClient.getFilteredPost(filter, 3, object : Callback<PostList?> {
+            override fun onFailure(call: Call<PostList?>, t: Throwable) {
+                // Handle the failure case
+            }
+
+            override fun onResponse(call: Call<PostList?>, response: Response<PostList?>) {
+                // Handle the success case
+                val responseData: PostList? = response.body()
+                postReddit = responseData?.data?.children!!
+                for (i in 0 until postReddit?.size as Int) {
+                    val view = LayoutInflater.from(container.context)
+                        .inflate(R.layout.post, container, false)
+                    view.tag = "community_icon"
+                    PostDataFilling.fillPost(view, postReddit[i].data)
+                    println("yoooo "+ i +" = "+ postReddit[i].data.title )
+                    container.addView(view)
+
+                }
+            }
+        })
     }
 }

@@ -1,16 +1,50 @@
 package com.epitech.soraeven
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import com.epitech.soraeven.controller.PostDataFilling
+import com.epitech.soraeven.controller.RedditClient
 import com.epitech.soraeven.model.PostList
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SearchBar (private val context: Context){
     private lateinit var mapFilterButton: HashMap<Button, Boolean>
     private lateinit var postReddit : Array<PostList.DataPostList.ChildrenPost>
+    private lateinit var allPostsContainer: LinearLayout
+
+    private fun displayPostButton(numberOfViews: Int, container: ViewGroup, filter: String) {
+        container.removeAllViews()
+        RedditClient.getFilteredPost(filter, 10, object : Callback<PostList?> {
+            override fun onFailure(call: Call<PostList?>, t: Throwable) {
+                // Handle the failure case
+            }
+
+            override fun onResponse(call: Call<PostList?>, response: Response<PostList?>) {
+                // Handle the success case
+                val responseData: PostList? = response.body()
+                postReddit = responseData?.data?.children!!
+                for (i in 0 until postReddit?.size as Int) {
+                    val view = LayoutInflater.from(container.context)
+                        .inflate(R.layout.post, container, false)
+                    view.tag = "community_icon"
+                    PostDataFilling.fillPost(view, postReddit[i].data)
+                    container.addView(view)
+
+                }
+            }
+        })
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setupFilterButtons(bestButtonFilter: Button,
@@ -50,6 +84,9 @@ class SearchBar (private val context: Context){
                     else -> filter = "best"
                 }
 
+                allPostsContainer = (context as Activity).findViewById(R.id.allPostsLayout)
+                println("filter = $filter")
+                displayPostButton(10, allPostsContainer, filter)
 
             }
         }
