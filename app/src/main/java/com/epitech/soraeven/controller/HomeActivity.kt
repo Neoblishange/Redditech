@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -62,7 +63,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         allPostsContainer = findViewById(R.id.allPostsLayout)
-        displayPost(5, allPostsContainer, "best")
+        displayPost(1, allPostsContainer, "best")
 
         homePage = findViewById<ConstraintLayout>(R.id.homePage)
         getViewsByTag(homePage, "community_icon")
@@ -91,7 +92,8 @@ class HomeActivity : AppCompatActivity() {
         }
     }
     private fun displayPost(numberOfViews: Int, container: ViewGroup , filter: String) {
-        RedditClient.getFilteredPost(filter, 10, object : Callback<PostList?> {
+
+        RedditClient.getFilteredPost(filter, 3, object : Callback<PostList?> {
             override fun onFailure(call: Call<PostList?>, t: Throwable) {
                 // Handle the failure case
             }
@@ -100,13 +102,14 @@ class HomeActivity : AppCompatActivity() {
                 // Handle the success case
                 val responseData: PostList? = response.body()
                 postReddit = responseData?.data?.children!!
-                println(responseData?.data?.children?.size)
                 for (i in 0 until postReddit?.size as Int) {
                     val view = LayoutInflater.from(container.context)
                         .inflate(R.layout.post, container, false)
                     view.tag = "community_icon"
-                    container.addView(view)
                     PostDataFilling.fillPost(view, postReddit[i].data)
+                    println("yoooo "+ i +" = "+ postReddit[i].data.title )
+                    container.addView(view)
+
                 }
             }
         })
@@ -130,5 +133,11 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         return views
+    }
+
+    companion object {
+        fun displayPost(i: Int, allPostsContainer: LinearLayout?, s: String) {
+
+        }
     }
 }
