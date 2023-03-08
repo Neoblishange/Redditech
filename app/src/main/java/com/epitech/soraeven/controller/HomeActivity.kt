@@ -56,25 +56,47 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this@HomeActivity, ProfileActivity::class.java)
             startActivity(intent)
         }
+
         bestButtonFilter.setOnClickListener{
-            Log.d("SUB/UNSUB", "In click event");
-            RedditClient.subscribeOrUnsubscribeToSubreddit(
-            "starcitizen", "unsub", object : Callback<ResponseBody?> {
-                override fun onResponse(
-                    call: Call<ResponseBody?>,
-                    response: Response<ResponseBody?>
-                ) {
-                    Log.d("SUB/UNSUB", "In response");
-                    Log.d("SUB/UNSUB", response.code().toString());
-                }
+            /*
+            // Test VoteOnPost
+            Log.d("VOTE", "In click event");
+            RedditClient.voteOnPost(
+                "t3_11m1evv", 1, object : Callback<ResponseBody?> {
+                    override fun onResponse(
+                        call: Call<ResponseBody?>,
+                        response: Response<ResponseBody?>
+                    ) {
+                        Log.d("VOTE", "In response");
+                        Log.d("VOTE", response.code().toString());
+                    }
 
-                override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
-                    TODO("Not yet implemented")
-                }
+                    override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+                        TODO("Not yet implemented")
+                    }
 
-            }
-        )
+                }
+            )*/
+            /*
+//Test Sub/Unsub
+    Log.d("SUB/UNSUB", "In click event");
+    RedditClient.subscribeOrUnsubscribeToSubreddit(
+    "starcitizen", "unsub", object : Callback<ResponseBody?> {
+        override fun onResponse(
+            call: Call<ResponseBody?>,
+            response: Response<ResponseBody?>
+        ) {
+            Log.d("SUB/UNSUB", "In response");
+            Log.d("SUB/UNSUB", response.code().toString());
         }
+
+        override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+            TODO("Not yet implemented")
+        }
+
+    }
+)*/
+}
 
         homeButton = findViewById(R.id.homeButton)
         homeButton.setOnClickListener {

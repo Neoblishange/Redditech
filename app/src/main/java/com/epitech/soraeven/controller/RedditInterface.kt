@@ -36,4 +36,10 @@ interface RedditInterface {
         @Field("sr_name") subredditName: String?,
         @Field("action") action: String?
     ): Call<ResponseBody?>?
+    @POST("/api/vote")
+    @FormUrlEncoded
+    fun voteOnPost(
+        @Field("id") name: String,
+        @Field("dir") dir: Int
+    ): Call<ResponseBody?>?
 }

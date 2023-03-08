@@ -60,4 +60,7 @@ object RedditClient {
     fun subscribeOrUnsubscribeToSubreddit(srName: String, action: String, callback: Callback<ResponseBody?>) {
         client.subscribeOrUnsubscribeToSubreddit(srName, action)?.enqueue(callback)
     }
+    fun voteOnPost(name: String, dir: Int, callback: Callback<ResponseBody?>) {
+        client.voteOnPost(name, dir)?.enqueue(callback)
+    }
 }
