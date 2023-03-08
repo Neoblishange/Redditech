@@ -10,7 +10,7 @@
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintBottom_toBottomOf="parent"
           android:layout_width="match_parent"
-          android:layout_height="80dp"
+          android:layout_height="120dp"
           android:id="@+id/headerPost"
           android:backgroundTint="@color/grey"
           android:layout_gravity="center_horizontal"
@@ -27,7 +27,7 @@
         />
         <TextView
                 android:text="A random subreddit"
-                android:layout_width="220dp"
+                android:layout_width="240dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/subredditName"
                 android:layout_marginLeft="80dp"
@@ -37,7 +37,7 @@
         />
         <TextView
                 android:text="r/xxxx"
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/subredditPrefixedName"
                 android:layout_marginLeft="80dp"
@@ -45,13 +45,14 @@
                 android:textColor="@color/black"
         />
         <TextView
-                android:text="197k members"
-                android:layout_width="100dp"
+                android:text="19744k members"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/created_utc"
+                android:id="@+id/subscribers"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="50dp"
+                android:layout_marginLeft="55dp"
                 android:layout_marginTop="45dp"
+                android:gravity="end"
                 android:textColor="@color/black"
         />
         <Button
@@ -67,5 +68,16 @@
                 app:backgroundTint="@color/white"
                 android:textColor="@color/black"
         />
+        <TextView
+            android:text="public description"
+            android:layout_width="375dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/public_description"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="80dp"
+            android:maxLines="2"
+            android:textColor="@color/black">
+
+        </TextView>
     </view>
 </androidx.constraintlayout.widget.ConstraintLayout>

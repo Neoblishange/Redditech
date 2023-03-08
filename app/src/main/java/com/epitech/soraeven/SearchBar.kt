@@ -3,14 +3,51 @@ package com.epitech.soraeven
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
+import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Button
+import android.widget.EditText
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import com.epitech.soraeven.controller.RedditClient
 import com.epitech.soraeven.model.PostList
+import com.epitech.soraeven.model.subreddit.SearchSubreddit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SearchBar (private val context: Context){
     private lateinit var mapFilterButton: HashMap<Button, Boolean>
     private lateinit var postReddit : Array<PostList.DataPostList.ChildrenPost>
+
+    fun setupSearchBar(searchTextBar: EditText, listener: SearchListener){
+        var text = ""
+        val delay = 1500L
+        val handler = Handler()
+        val runnable = Runnable {
+            if(text.isNotEmpty()) {
+                searchSubredditBar(text, listener)
+            }
+            else {
+                listener.onRemoveSearch()
+            }
+        }
+
+        searchTextBar.addTextChangedListener (object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                text = s.toString()
+                handler.removeCallbacks(runnable)
+                handler.postDelayed(runnable, delay)
+            }
+        })
+    }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setupFilterButtons(bestButtonFilter: Button,
@@ -54,4 +91,24 @@ class SearchBar (private val context: Context){
             }
         }
     }
+
+    fun searchSubredditBar(text: String, listener: SearchListener){
+        RedditClient.searchSubreddit(text, 10, object : Callback<SearchSubreddit?> {
+            override fun onResponse(call: Call<SearchSubreddit?>, response: Response<SearchSubreddit?>) {
+                val responseData: SearchSubreddit? = response.body()
+                responseData?.let { data ->
+                    listener.onSearchResult(data)
+                }
+            }
+
+            override fun onFailure(call: Call<SearchSubreddit?>, t: Throwable) {
+
+            }
+        })
+    }
+}
+
+interface SearchListener {
+    fun onSearchResult(subreddits: SearchSubreddit)
+    fun onRemoveSearch()
 }

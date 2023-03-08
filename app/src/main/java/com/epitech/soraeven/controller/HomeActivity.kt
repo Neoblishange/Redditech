@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
@@ -15,11 +16,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.epitech.soraeven.*
 import com.epitech.soraeven.model.PostList
+import com.epitech.soraeven.model.subreddit.SearchSubreddit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), SearchListener  {
     private val redirectUri = Uri.parse("soraeven://oauth2redirect")
     private lateinit var profileButton: Button
     private lateinit var homeButton: Button
@@ -27,6 +29,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var homePage: ConstraintLayout
 
     private lateinit var searchBar: SearchBar
+    private lateinit var searchTextBar: EditText
     private lateinit var bestButtonFilter: Button
     private lateinit var hotButtonFilter: Button
     private lateinit var newButtonFilter: Button
@@ -47,6 +50,7 @@ class HomeActivity : AppCompatActivity() {
         hotButtonFilter = findViewById(R.id.hotButtonFilter)
         newButtonFilter = findViewById(R.id.newButtonFilter)
         topButtonFilter = findViewById(R.id.topButtonFilter)
+        searchTextBar = findViewById(R.id.searchTextBar)
         searchBar = SearchBar(this)
         searchBar.setupFilterButtons(
             bestButtonFilter, hotButtonFilter,
@@ -77,6 +81,8 @@ class HomeActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
             }
+
+        setListenerSearchBar(searchBar, allPostsContainer)
     }
 
     override fun onResume() {
@@ -112,6 +118,10 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
+    private fun setListenerSearchBar(searchBar: SearchBar, container: ViewGroup){
+        searchBar.setupSearchBar(searchTextBar, listener = apply {  })
+    }
+
     private fun joinSubreddit() {
 
     }
@@ -130,5 +140,30 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         return views
+    }
+
+    //if search success
+    override fun onSearchResult(searchSubreddit: SearchSubreddit) {
+        resetDisplayHomeBody(allPostsContainer)
+        displaySubreddit(searchSubreddit, allPostsContainer)
+    }
+    //cancel search
+    override fun onRemoveSearch() {
+        resetDisplayHomeBody(allPostsContainer)
+        displayPost(5, allPostsContainer, "best")
+    }
+
+    private fun displaySubreddit(searchSubreddit: SearchSubreddit, container: ViewGroup){
+        for(i in 0 until searchSubreddit.data.children.size) {
+            val view = LayoutInflater.from(container.context)
+                .inflate(R.layout.subreddit_profile, container, false)
+            view.tag = "community_icon"
+            container.addView(view)
+            SubredditDataFilling.fillPost(view, searchSubreddit.data.children[i].data)
+        }
+    }
+
+    private fun resetDisplayHomeBody(view: ViewGroup){
+        view.removeAllViewsInLayout()
     }
 }
