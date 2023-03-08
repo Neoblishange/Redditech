@@ -6,6 +6,7 @@ import com.epitech.soraeven.model.DataPostResult
 import com.epitech.soraeven.model.profil.UserSettings
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -55,5 +56,8 @@ object RedditClient {
     }
     fun setUserSettings(userSettings: UserSettings, callback: Callback<UserSettings?>) {
         client.setUserSettings(userSettings).enqueue(callback)
+    }
+    fun subscribeOrUnsubscribeToSubreddit(srName: String, action: String, callback: Callback<ResponseBody?>) {
+        client.subscribeOrUnsubscribeToSubreddit(srName, action)?.enqueue(callback)
     }
 }

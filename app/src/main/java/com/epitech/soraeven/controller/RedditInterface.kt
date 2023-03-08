@@ -3,8 +3,10 @@ package com.epitech.soraeven.controller
 import com.epitech.soraeven.model.AccessToken
 import com.epitech.soraeven.model.DataPostResult
 import com.epitech.soraeven.model.profil.UserSettings
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
+
 
 interface RedditInterface {
     @Headers("Accept: application/json")
@@ -27,4 +29,11 @@ interface RedditInterface {
     @Headers("Accept: application/json")
     @PATCH("/api/v1/me/prefs")
     fun setUserSettings(@Body userSettings: UserSettings): Call<UserSettings>
+
+    @POST("/api/subscribe")
+    @FormUrlEncoded
+    fun subscribeOrUnsubscribeToSubreddit(
+        @Field("sr_name") subredditName: String?,
+        @Field("action") action: String?
+    ): Call<ResponseBody?>?
 }

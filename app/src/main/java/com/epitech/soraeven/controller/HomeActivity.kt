@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.epitech.soraeven.*
 import com.epitech.soraeven.model.DataPostResult
+import com.epitech.soraeven.model.profil.UserSettings
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -53,18 +56,24 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this@HomeActivity, ProfileActivity::class.java)
             startActivity(intent)
         }
-        bestButtonFilter.setOnClickListener{RedditClient.getFilteredPost(
-            "best", 3, object : Callback<DataPostResult?> {
-            override fun onFailure(call: Call<DataPostResult?>, t: Throwable) {
-                // Handle the failure case
-            }
+        bestButtonFilter.setOnClickListener{
+            Log.d("SUB/UNSUB", "In click event");
+            RedditClient.subscribeOrUnsubscribeToSubreddit(
+            "starcitizen", "unsub", object : Callback<ResponseBody?> {
+                override fun onResponse(
+                    call: Call<ResponseBody?>,
+                    response: Response<ResponseBody?>
+                ) {
+                    Log.d("SUB/UNSUB", "In response");
+                    Log.d("SUB/UNSUB", response.code().toString());
+                }
 
-            override fun onResponse(call: Call<DataPostResult?>, response: Response<DataPostResult?>) {
-                // Handle the success case
-                val responseData: DataPostResult? = response.body()
-                println(responseData)
+                override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
             }
-        })
+        )
         }
 
         homeButton = findViewById(R.id.homeButton)
