@@ -2,11 +2,10 @@ package com.epitech.soraeven.controller
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SwitchCompat
 import com.epitech.soraeven.R
 import com.epitech.soraeven.model.profil.UserSettings
@@ -26,6 +25,7 @@ class UserSettingsActivity : AppCompatActivity(), View.OnClickListener {
 
     private var mUserSettings: UserSettings? = null
     private var mUserSettingsAreFetched = false
+    private val languages = listOf("English", "French", "German", "Spanish", "Italian")
 
     private lateinit var mDisplayLanguage: TextView
     private lateinit var mEnableFollowers: SwitchCompat
@@ -60,10 +60,8 @@ class UserSettingsActivity : AppCompatActivity(), View.OnClickListener {
     private fun fetchAndSetUserSettings() {
         RedditClient.getUserSettings(object : Callback<UserSettings?> {
             override fun onFailure(call: Call<UserSettings?>, t: Throwable) {
-                Toast.makeText(this@UserSettingsActivity, "Problem in fetch!", Toast.LENGTH_SHORT).show()
             }
             override fun onResponse(call: Call<UserSettings?>, response: Response<UserSettings?>) {
-                Toast.makeText(this@UserSettingsActivity, "Fetch successful!", Toast.LENGTH_SHORT).show()
                 val responseUserSettings = response.body()
                 responseUserSettings?.let { saveUserPreferences(it) }
                 if (responseUserSettings != null) {
@@ -132,28 +130,63 @@ class UserSettingsActivity : AppCompatActivity(), View.OnClickListener {
             .apply()
     }
     override fun onClick(view: View?) {
-        Log.d("UPDATE_USER_SETTINGS", "In click event");
-        // Toast.makeText(this, view.toString(), Toast.LENGTH_SHORT).show()
+        var shouldTriggerUpdateUserSettings = true
+
         if (view == mDisplayLanguage) {
-            // Do something
-        } else if (view == mEnableFollowers) {
-            Log.d("UPDATE_USER_SETTINGS", "In enableFollowers option");
-            updateUserBooleanPreference(mEnableFollowers, USER_PREFERENCES_ENABLE_FOLLOWERS)
-            mUserSettings?.enableFollowers = mEnableFollowers.isChecked
-        } else if (view == mNoProfanity) {
-            updateUserBooleanPreference(mNoProfanity, USER_PREFERENCES_NO_PROFANITY)
-            mUserSettings?.noProfanity = mNoProfanity.isChecked
-        } else if (view == mHideAds) {
-            updateUserBooleanPreference(mHideAds, USER_PREFERENCES_HIDE_ADS)
-            mUserSettings?.hideAds = mHideAds.isChecked
-        } else if (view == mActiveInCommunities) {
-            updateUserBooleanPreference(mActiveInCommunities, USER_PREFERENCES_TOP_KARMA)
-            mUserSettings?.activeInCommunities = mActiveInCommunities.isChecked
-        } else if (view == mAutoplayVideos) {
-            updateUserBooleanPreference(mAutoplayVideos, USER_PREFERENCES_VIDEO_AUTOPLAY)
-            mUserSettings?.videoAutoplay = mAutoplayVideos.isChecked
+            shouldTriggerUpdateUserSettings = false
+            handleLanguageUpdate()
         }
-        updateUserSettings()
+        when (view) {
+            mEnableFollowers -> {
+                updateUserBooleanPreference(mEnableFollowers, USER_PREFERENCES_ENABLE_FOLLOWERS)
+                mUserSettings?.enableFollowers = mEnableFollowers.isChecked
+            }
+            mNoProfanity -> {
+                updateUserBooleanPreference(mNoProfanity, USER_PREFERENCES_NO_PROFANITY)
+                mUserSettings?.noProfanity = mNoProfanity.isChecked
+            }
+            mHideAds -> {
+                updateUserBooleanPreference(mHideAds, USER_PREFERENCES_HIDE_ADS)
+                mUserSettings?.hideAds = mHideAds.isChecked
+            }
+            mActiveInCommunities -> {
+                updateUserBooleanPreference(mActiveInCommunities, USER_PREFERENCES_TOP_KARMA)
+                mUserSettings?.activeInCommunities = mActiveInCommunities.isChecked
+            }
+            mAutoplayVideos -> {
+                updateUserBooleanPreference(mAutoplayVideos, USER_PREFERENCES_VIDEO_AUTOPLAY)
+                mUserSettings?.videoAutoplay = mAutoplayVideos.isChecked
+            }
+        }
+        if (shouldTriggerUpdateUserSettings) updateUserSettings()
+    }
+
+    private fun handleLanguageUpdate() {
+        val popupMenu = PopupMenu(this@UserSettingsActivity, mDisplayLanguage)
+        languages.forEach { lang ->
+            popupMenu.menu.add(lang)
+        }
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            mDisplayLanguage.text = menuItem.title
+            when (menuItem.title) {
+                "English" -> mUserSettings?.lang = "en"
+                "French" -> mUserSettings?.lang = "fr"
+                "German" -> mUserSettings?.lang = "de"
+                "Spanish" -> mUserSettings?.lang = "es"
+                "Italian" -> mUserSettings?.lang = "it"
+            }
+            updateUserStringPreference(mUserSettings?.lang, USER_PREFERENCES_LANG)
+            updateUserSettings()
+            true
+        }
+        popupMenu.show()
+    }
+
+    private fun updateUserStringPreference(userStringPreference: String?, userPreference: String) {
+        getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE)
+            .edit()
+            .putString(userPreference, userStringPreference)
+            .apply()
     }
 
     private fun updateUserBooleanPreference(switch: SwitchCompat, userPreference: String) {
@@ -164,20 +197,15 @@ class UserSettingsActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun updateUserSettings() {
-        Log.d("UPDATE_USER_SETTINGS", "In update method");
         mUserSettings?.let {
             RedditClient.setUserSettings(it, object : Callback<UserSettings?> {
                 override fun onResponse(
                     call: Call<UserSettings?>,
                     response: Response<UserSettings?>
                 ) {
-                    Toast.makeText(this@UserSettingsActivity, response.body().toString(), Toast.LENGTH_SHORT)
                     println(response)
-                    Log.d("UPDATE_USER_SETTINGS", response.toString());
                 }
                 override fun onFailure(call: Call<UserSettings?>, t: Throwable) {
-                    Toast.makeText(this@UserSettingsActivity, "Failed", Toast.LENGTH_SHORT)
-                    Log.d("UPDATE_USER_SETTINGS", t.toString());
                 }
 
             })
