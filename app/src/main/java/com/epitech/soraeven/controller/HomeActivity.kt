@@ -157,9 +157,14 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
         for(i in 0 until searchSubreddit.data.children.size) {
             val view = LayoutInflater.from(container.context)
                 .inflate(R.layout.subreddit_profile, container, false)
-            view.tag = "community_icon"
             container.addView(view)
-            SubredditDataFilling.fillPost(view, searchSubreddit.data.children[i].data)
+            //view.tag = "subreddit" + searchSubreddit.data.children[i].data.id
+            view.setOnClickListener {
+                val intent = Intent(this@HomeActivity, Subreddit::class.java)
+                intent.putExtra("subredditUsername", searchSubreddit.data.children[i].data.display_name_prefixed)
+                startActivity(intent)
+            }
+            SubredditDataFilling.fillAllSubreddits(view, searchSubreddit.data.children[i].data)
         }
     }
 

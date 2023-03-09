@@ -1,8 +1,11 @@
 package com.epitech.soraeven.controller
 
+import com.epitech.soraeven.Subreddit
 import com.epitech.soraeven.model.AccessToken
 import com.epitech.soraeven.model.PostList
 import com.epitech.soraeven.model.profil.ProfilUser
+import com.epitech.soraeven.model.profil.SubredditProfilUser
+import com.epitech.soraeven.model.subreddit.DisplayInfoSubreddit
 import com.epitech.soraeven.model.subreddit.SearchSubreddit
 import retrofit2.Call
 import retrofit2.http.*
@@ -32,4 +35,18 @@ interface RedditInterface {
         @Query("q") query: String,
         @Query("limit") limit: Int
     ): Call<SearchSubreddit?>?
+
+    @Headers("Accept: application/json")
+    @GET("{subreddit}/about")
+    fun getSubredditProfile(
+        @Path("subreddit") subreddit: String,
+    ): Call<DisplayInfoSubreddit?>?
+
+    @Headers("Accept: application/json")
+    @GET("{subreddit}/{filter}")
+    fun getSubredditPosts(
+        @Path("subreddit") subreddit: String,
+        @Path("filter") filter: String,
+        @Query("limit") limit: Int
+    ): Call<PostList?>?
 }

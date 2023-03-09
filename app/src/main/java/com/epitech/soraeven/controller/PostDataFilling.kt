@@ -1,12 +1,17 @@
 package com.epitech.soraeven.controller
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.icu.text.SimpleDateFormat
 import android.view.View
+import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.epitech.soraeven.ImageLoading
 import com.epitech.soraeven.R
 import com.epitech.soraeven.model.PostList
+import java.sql.Date
 
 class PostDataFilling constructor(context: Context): View(context){
     companion object {
@@ -20,7 +25,7 @@ class PostDataFilling constructor(context: Context): View(context){
             val tvcommentCount = (view)?.findViewById<TextView>(R.id.commentCount)
 
             tvAuthor?.text = data?.authorFullname
-            tvCreated_utc?.text = data?.created_utc.toString()
+            tvCreated_utc?.text = data?.created_utc?.let { unixDateToUTC(it.toLong()) }
             tvTitle?.text = data?.title
             tvVotes?.text = data?.numberOfUpVotes.toString()
             tvcommentCount?.text = data?.num_comments.toString()
@@ -30,16 +35,26 @@ class PostDataFilling constructor(context: Context): View(context){
                 if (data?.preview?.images?.get(0)?.source?.url != null) {
                     val baseUrlProfileImage = data?.preview?.images?.get(0)?.source?.url
                     val indexerProfileImage = baseUrlProfileImage?.indexOf("?")
-                    val extractedContentImageUrl = if (indexerProfileImage!! >= 0) baseUrlProfileImage.substring(0, indexerProfileImage) else baseUrlProfileImage
+                    var extractedContentImageUrl = if (indexerProfileImage!! >= 0) baseUrlProfileImage.substring(0, indexerProfileImage) else baseUrlProfileImage
+                    extractedContentImageUrl = extractedContentImageUrl.replace("preview", "i")
                     ivThumbnail.visibility = VISIBLE
-                    Glide.with(view)
+                    val imageLoading = ImageLoading()
+                    imageLoading.customViewIntegration(view.context, extractedContentImageUrl, ivThumbnail)
+                    /*Glide.with(view)
                         .load(extractedContentImageUrl)
-                        .into(ivThumbnail)
+                        .into(ivThumbnail)*/
                 }else {
                     ivThumbnail.visibility = GONE
                 }
 
             }
+        }
+
+        @SuppressLint("SimpleDateFormat")
+        private fun unixDateToUTC(unixDate: Long): String {
+            val date = Date(unixDate * 1000)
+            val sdf = SimpleDateFormat("dd-MM-yyyy HH:mm")
+            return sdf.format(date)
         }
     }
 }
