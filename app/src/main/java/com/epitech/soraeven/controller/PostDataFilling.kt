@@ -36,7 +36,12 @@ class PostDataFilling constructor(context: Context): View(context){
                     val baseUrlProfileImage = data?.preview?.images?.get(0)?.source?.url
                     val indexerProfileImage = baseUrlProfileImage?.indexOf("?")
                     var extractedContentImageUrl = if (indexerProfileImage!! >= 0) baseUrlProfileImage.substring(0, indexerProfileImage) else baseUrlProfileImage
-                    extractedContentImageUrl = extractedContentImageUrl.replace("preview", "i")
+                    if(extractedContentImageUrl.contains("external")) {
+                        extractedContentImageUrl = extractedContentImageUrl.replace("external-preview", "i")
+                    }
+                    else {
+                        extractedContentImageUrl = extractedContentImageUrl.replace("preview", "i")
+                    }
                     ivThumbnail.visibility = VISIBLE
                     val imageLoading = ImageLoading()
                     imageLoading.customViewIntegration(view.context, extractedContentImageUrl, ivThumbnail)

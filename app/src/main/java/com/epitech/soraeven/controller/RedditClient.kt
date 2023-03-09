@@ -59,8 +59,8 @@ object RedditClient {
             ?.enqueue(callback)
     }
 
-    fun searchSubreddit(query: String, limit: Int, callback: Callback<SearchSubreddit?>){
-        client.searchSubreddits(query, limit)
+    fun searchSubreddit(query: String, limit: Int, count: Int, after: String, callback: Callback<SearchSubreddit?>){
+        client.searchSubreddits(query, limit, count, after)
             ?.enqueue(callback)
     }
 
@@ -71,9 +71,9 @@ object RedditClient {
         }
     }
 
-    fun getSubredditPosts(subreddit: String?, filter: String, limit: Int, callback: Callback<PostList?>){
+    fun getSubredditPosts(subreddit: String?, filter: String, limit: Int, count: Int, after: String, callback: Callback<PostList?>){
         if (subreddit != null) {
-            client.getSubredditPosts(subreddit, filter, limit)
+            client.getSubredditPosts(subreddit, filter, limit, count, after)
                 ?.enqueue(callback)
         }
     }

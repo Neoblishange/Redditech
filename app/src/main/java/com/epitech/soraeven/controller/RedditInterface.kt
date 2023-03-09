@@ -33,7 +33,9 @@ interface RedditInterface {
     @GET("subreddits/search")
     fun searchSubreddits(
         @Query("q") query: String,
-        @Query("limit") limit: Int
+        @Query("limit") limit: Int,
+        @Query("count") count: Int,
+        @Query("after") after: String
     ): Call<SearchSubreddit?>?
 
     @Headers("Accept: application/json")
@@ -47,6 +49,8 @@ interface RedditInterface {
     fun getSubredditPosts(
         @Path("subreddit") subreddit: String,
         @Path("filter") filter: String,
-        @Query("limit") limit: Int
+        @Query("limit") limit: Int,
+        @Query("count") count: Int,
+        @Query("after") after: String
     ): Call<PostList?>?
 }

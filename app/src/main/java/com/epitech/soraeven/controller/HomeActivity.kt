@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -37,8 +38,11 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
 
     private lateinit var postReddit : Array<PostList.DataPostList.ChildrenPost>
 
-
     private lateinit var footerView: View
+
+    private var redditPagination = RedditPagination()
+    private var limit = 10
+    private var maxDisplayPosts = limit * 2 + limit
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +70,7 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
         }
 
         allPostsContainer = findViewById(R.id.allPostsLayout)
-        displayPost(5, allPostsContainer, "best")
+        displayPost(allPostsContainer, "best")
 
         homePage = findViewById<ConstraintLayout>(R.id.homePage)
         getViewsByTag(homePage, "community_icon")
@@ -83,6 +87,13 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
             }
 
         setListenerSearchBar(searchBar, allPostsContainer)
+        redditPagination.loadingNewData(
+            applicationContext,
+            (allPostsContainer.parent as ScrollView),
+            limit,
+            TypeOfData.SUBREDDITS_SEARCH,
+            listener = apply {  }
+        )
     }
 
     override fun onResume() {
@@ -96,8 +107,8 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
             }
         }
     }
-    private fun displayPost(numberOfViews: Int, container: ViewGroup , filter: String) {
-        RedditClient.getFilteredPost(filter, 10, object : Callback<PostList?> {
+    fun displayPost(container: ViewGroup , filter: String) {
+        RedditClient.getFilteredPost(filter, limit, object : Callback<PostList?> {
             override fun onFailure(call: Call<PostList?>, t: Throwable) {
                 // Handle the failure case
             }
@@ -143,14 +154,27 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
     }
 
     //if search success
-    override fun onSearchResult(searchSubreddit: SearchSubreddit) {
-        resetDisplayHomeBody(allPostsContainer)
+    override fun onSearchResult(text: String, searchSubreddit: SearchSubreddit) {
+        if(!redditPagination.userIsSearchingSubreddit) {
+            resetScrollViewDisplay(allPostsContainer)
+            redditPagination.userIsSearchingSubreddit = true
+        }
+        maxDisplayPosts -= limit
+        if(maxDisplayPosts == 0){
+            resetScrollViewDisplay(allPostsContainer)
+            (allPostsContainer.parent as ScrollView).post{ (allPostsContainer.parent as ScrollView).scrollTo(0,0) }
+            maxDisplayPosts = limit * 2
+        }
         displaySubreddit(searchSubreddit, allPostsContainer)
+        redditPagination.searchedText = text
+        redditPagination.loadingData = false
+        redditPagination.lastId = searchSubreddit.data.children[searchSubreddit.data.children.size - 1].data.id
     }
     //cancel search
     override fun onRemoveSearch() {
-        resetDisplayHomeBody(allPostsContainer)
-        displayPost(5, allPostsContainer, "best")
+        resetScrollViewDisplay(allPostsContainer)
+        displayPost(allPostsContainer, "best")
+        redditPagination.userIsSearchingSubreddit = false
     }
 
     private fun displaySubreddit(searchSubreddit: SearchSubreddit, container: ViewGroup){
@@ -168,7 +192,7 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
         }
     }
 
-    private fun resetDisplayHomeBody(view: ViewGroup){
+    private fun resetScrollViewDisplay(view: ViewGroup){
         view.removeAllViewsInLayout()
     }
 }

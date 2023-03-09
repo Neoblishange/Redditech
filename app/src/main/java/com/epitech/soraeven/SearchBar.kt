@@ -27,7 +27,7 @@ class SearchBar (private val context: Context){
         val handler = Handler()
         val runnable = Runnable {
             if(text.isNotEmpty()) {
-                searchSubredditBar(text, listener)
+                searchSubredditBar(text, 0, "", listener)
             }
             else {
                 listener.onRemoveSearch()
@@ -92,12 +92,12 @@ class SearchBar (private val context: Context){
         }
     }
 
-    fun searchSubredditBar(text: String, listener: SearchListener){
-        RedditClient.searchSubreddit(text, 10, object : Callback<SearchSubreddit?> {
+    fun searchSubredditBar(text: String, count: Int, lastId: String, listener: SearchListener){
+        RedditClient.searchSubreddit(text, 10, count, lastId, object : Callback<SearchSubreddit?> {
             override fun onResponse(call: Call<SearchSubreddit?>, response: Response<SearchSubreddit?>) {
                 val responseData: SearchSubreddit? = response.body()
                 responseData?.let { data ->
-                    listener.onSearchResult(data)
+                    listener.onSearchResult(text, data)
                 }
             }
 
@@ -109,6 +109,6 @@ class SearchBar (private val context: Context){
 }
 
 interface SearchListener {
-    fun onSearchResult(subreddits: SearchSubreddit)
+    fun onSearchResult(text: String, subreddits: SearchSubreddit)
     fun onRemoveSearch()
 }
