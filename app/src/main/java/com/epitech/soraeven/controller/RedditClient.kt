@@ -2,8 +2,11 @@ package com.epitech.soraeven.controller
 
 import android.content.Context
 import com.epitech.soraeven.MyApplication
+import com.epitech.soraeven.Subreddit
 import com.epitech.soraeven.model.PostList
 import com.epitech.soraeven.model.profil.ProfilUser
+import com.epitech.soraeven.model.subreddit.DisplayInfoSubreddit
+import com.epitech.soraeven.model.subreddit.SearchSubreddit
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Callback
@@ -54,5 +57,24 @@ object RedditClient {
     fun getProfile(callback: Callback<ProfilUser?>){
         client.getProfile()
             ?.enqueue(callback)
+    }
+
+    fun searchSubreddit(query: String, limit: Int, count: Int, after: String, callback: Callback<SearchSubreddit?>){
+        client.searchSubreddits(query, limit, count, after)
+            ?.enqueue(callback)
+    }
+
+    fun getSubredditProfile(subreddit: String?, callback: Callback<DisplayInfoSubreddit?>){
+        if (subreddit != null) {
+            client.getSubredditProfile(subreddit)
+                ?.enqueue(callback)
+        }
+    }
+
+    fun getSubredditPosts(subreddit: String?, filter: String, limit: Int, count: Int, after: String, callback: Callback<PostList?>){
+        if (subreddit != null) {
+            client.getSubredditPosts(subreddit, filter, limit, count, after)
+                ?.enqueue(callback)
+        }
     }
 }
