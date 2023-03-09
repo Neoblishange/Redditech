@@ -70,7 +70,9 @@
                     android:layout_gravity="center_horizontal"
                     app:cornerRadius="20dp"
                     app:backgroundTint="@color/grey" tools:ignore="TouchTargetSizeCheck"
-                    tools:layout_editor_absoluteX="140dp"/>
+                    tools:layout_editor_absoluteX="140dp"
+                    android:textColor="@color/black"
+            />
         </view>
     </view>
 </androidx.constraintlayout.widget.ConstraintLayout>

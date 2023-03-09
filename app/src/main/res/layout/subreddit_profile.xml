@@ -65,6 +65,7 @@
                 android:layout_marginTop="15dp"
                 app:cornerRadius="20dp"
                 app:backgroundTint="@color/white"
+                android:textColor="@color/black"
         />
     </view>
 </androidx.constraintlayout.widget.ConstraintLayout>

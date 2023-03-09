@@ -15,14 +15,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.epitech.soraeven.*
-import com.epitech.soraeven.model.DataPostResult
-import com.epitech.soraeven.model.profil.UserSettings
-import okhttp3.ResponseBody
+import com.epitech.soraeven.model.PostList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-// import kotlin.reflect.typeOf
-
 
 class HomeActivity : AppCompatActivity() {
     private val redirectUri = Uri.parse("soraeven://oauth2redirect")
@@ -37,6 +33,12 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var newButtonFilter: Button
     private lateinit var topButtonFilter: Button
 
+    private lateinit var postReddit : Array<PostList.DataPostList.ChildrenPost>
+
+
+    private lateinit var footerView: View
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -51,52 +53,8 @@ class HomeActivity : AppCompatActivity() {
             bestButtonFilter, hotButtonFilter,
             newButtonFilter, topButtonFilter)
 
-        profileButton = findViewById(R.id.profileButton)
-        profileButton.setOnClickListener {
-            val intent = Intent(this@HomeActivity, ProfileActivity::class.java)
-            startActivity(intent)
-        }
-
-        bestButtonFilter.setOnClickListener{
-            /*
-            // Test VoteOnPost
-            Log.d("VOTE", "In click event");
-            RedditClient.voteOnPost(
-                "t3_11m1evv", 1, object : Callback<ResponseBody?> {
-                    override fun onResponse(
-                        call: Call<ResponseBody?>,
-                        response: Response<ResponseBody?>
-                    ) {
-                        Log.d("VOTE", "In response");
-                        Log.d("VOTE", response.code().toString());
-                    }
-
-                    override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
-                        TODO("Not yet implemented")
-                    }
-
-                }
-            )*/
-            /*
-//Test Sub/Unsub
-    Log.d("SUB/UNSUB", "In click event");
-    RedditClient.subscribeOrUnsubscribeToSubreddit(
-    "starcitizen", "unsub", object : Callback<ResponseBody?> {
-        override fun onResponse(
-            call: Call<ResponseBody?>,
-            response: Response<ResponseBody?>
-        ) {
-            Log.d("SUB/UNSUB", "In response");
-            Log.d("SUB/UNSUB", response.code().toString());
-        }
-
-        override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
-            TODO("Not yet implemented")
-        }
-
-    }
-)*/
-}
+        val footer = Footer()
+        footer.setupFooter(this@HomeActivity)
 
         homeButton = findViewById(R.id.homeButton)
         homeButton.setOnClickListener {
@@ -105,7 +63,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         allPostsContainer = findViewById(R.id.allPostsLayout)
-        displayPost(5, allPostsContainer)
+        displayPost(5, allPostsContainer, "best")
 
         homePage = findViewById<ConstraintLayout>(R.id.homePage)
         getViewsByTag(homePage, "community_icon")
@@ -114,6 +72,7 @@ class HomeActivity : AppCompatActivity() {
                     val intent = Intent(this@HomeActivity, Subreddit::class.java)
                     startActivity(intent)
                 }
+
                 view.findViewById<View>(R.id.headerPost).setOnClickListener {
                     val intent = Intent(this@HomeActivity, PostAndComments::class.java)
                     startActivity(intent)
@@ -132,16 +91,29 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
-    private fun displayPost(numberOfViews: Int, container: ViewGroup) {
-        for (i in 0 until numberOfViews) {
-            val view = LayoutInflater.from(container.context)
-                .inflate(R.layout.post, container, false)
-            view.tag = "community_icon"
-            container.addView(view)
-        }
+    private fun displayPost(numberOfViews: Int, container: ViewGroup , filter: String) {
+        RedditClient.getFilteredPost(filter, 10, object : Callback<PostList?> {
+            override fun onFailure(call: Call<PostList?>, t: Throwable) {
+                // Handle the failure case
+            }
+
+            override fun onResponse(call: Call<PostList?>, response: Response<PostList?>) {
+                // Handle the success case
+                val responseData: PostList? = response.body()
+                postReddit = responseData?.data?.children!!
+                println(responseData?.data?.children?.size)
+                for (i in 0 until postReddit?.size as Int) {
+                    val view = LayoutInflater.from(container.context)
+                        .inflate(R.layout.post, container, false)
+                    view.tag = "community_icon"
+                    container.addView(view)
+                    PostDataFilling.fillPost(view, postReddit[i].data)
+                }
+            }
+        })
     }
 
-    private fun joinSubreddit(){
+    private fun joinSubreddit() {
 
     }
 

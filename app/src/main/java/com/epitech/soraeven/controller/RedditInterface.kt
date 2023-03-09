@@ -4,6 +4,8 @@ import com.epitech.soraeven.model.AccessToken
 import com.epitech.soraeven.model.DataPostResult
 import com.epitech.soraeven.model.profil.UserSettings
 import okhttp3.ResponseBody
+import com.epitech.soraeven.model.PostList
+import com.epitech.soraeven.model.profil.ProfilUser
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -42,4 +44,8 @@ interface RedditInterface {
         @Field("id") name: String,
         @Field("dir") dir: Int
     ): Call<ResponseBody?>?
+
+    @Headers("Accept: application/json")
+    @GET("api/v1/me")
+    fun getProfile(): Call<ProfilUser?>?
 }

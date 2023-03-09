@@ -4,11 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.epitech.soraeven.R
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var mLoginButton: Button
+    private lateinit var mLoginButton: ImageButton
     private lateinit var mRedirectButton: Button
     // Right clientId
     private val clientId = "DmJqy_hwmMfuC0b1YMn43g"

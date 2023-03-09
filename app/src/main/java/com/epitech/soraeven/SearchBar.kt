@@ -6,9 +6,11 @@ import android.os.Build
 import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import com.epitech.soraeven.model.PostList
 
 class SearchBar (private val context: Context){
     private lateinit var mapFilterButton: HashMap<Button, Boolean>
+    private lateinit var postReddit : Array<PostList.DataPostList.ChildrenPost>
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setupFilterButtons(bestButtonFilter: Button,
@@ -27,6 +29,7 @@ class SearchBar (private val context: Context){
                 mapFilterButton[buttonFilter.key] = true
                 mapFilterButton.keys.filter { it != buttonFilter.key }
                     .forEach {
+                        println("COLOR : " + it)
                         mapFilterButton[it] = false
                         it.backgroundTintList =
                             ColorStateList.valueOf(ContextCompat.getColor(
@@ -37,6 +40,17 @@ class SearchBar (private val context: Context){
                     ColorStateList.valueOf(ContextCompat.getColor(
                         context, R.color.darkOrange
                     ))
+                var filter = "best"
+
+                when (buttonFilter.key) {
+                    bestButtonFilter -> filter = "best"
+                    hotButtonFilter -> filter = "hot"
+                    newButtonFilter -> filter = "new"
+                    topButtonFilter -> filter = "top"
+                    else -> filter = "best"
+                }
+
+
             }
         }
     }

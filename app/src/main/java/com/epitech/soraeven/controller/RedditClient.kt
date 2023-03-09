@@ -4,6 +4,8 @@ import android.content.Context
 import com.epitech.soraeven.MyApplication
 import com.epitech.soraeven.model.DataPostResult
 import com.epitech.soraeven.model.profil.UserSettings
+import com.epitech.soraeven.model.PostList
+import com.epitech.soraeven.model.profil.ProfilUser
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -47,7 +49,7 @@ object RedditClient {
             return retrofit!!.create(RedditInterface::class.java)
         }
 
-    fun getFilteredPost(filter: String, limit: Int, callback: Callback<DataPostResult?>) {
+    fun getFilteredPost(filter: String, limit: Int, callback: Callback<PostList?>) {
         client.getFilteredPost(filter, limit.toString())
             ?.enqueue(callback)
     }
@@ -62,5 +64,10 @@ object RedditClient {
     }
     fun voteOnPost(name: String, dir: Int, callback: Callback<ResponseBody?>) {
         client.voteOnPost(name, dir)?.enqueue(callback)
+    }
+
+    fun getProfile(callback: Callback<ProfilUser?>){
+        client.getProfile()
+            ?.enqueue(callback)
     }
 }

@@ -2,7 +2,7 @@ package com.epitech.soraeven.model;
 
 import com.google.gson.annotations.SerializedName
 
-data class DataPostResult (
+data class PostList (
     var kind: String,
     var data: DataPostList
 ){
@@ -16,7 +16,7 @@ data class DataPostResult (
             data class ChildrenPostData(
                 var id: String,
                 var name: String,
-                @SerializedName("author_fullname")
+                @SerializedName("author")
                 var authorFullname: String,
                 var title: String,
                 var subreddit: String,
@@ -26,7 +26,9 @@ data class DataPostResult (
                 var numberOfUpVotes: String,
                 @SerializedName("link_flair_text")
                 var linkFlairText: String,
-                var preview: Preview
+                var preview: Preview,
+                var created_utc: Int,
+                var num_comments: Int
             ){
                 data class Preview(
                     var images: ArrayList<Image>,
