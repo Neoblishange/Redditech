@@ -12,7 +12,6 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ScrollView
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +24,6 @@ import retrofit2.Response
 
 class HomeActivity : AppCompatActivity(), SearchListener  {
     private val redirectUri = Uri.parse("soraeven://oauth2redirect")
-    private lateinit var profileButton: Button
     private lateinit var homeButton: Button
     private lateinit var allPostsContainer: LinearLayout
     private lateinit var homePage: ConstraintLayout
@@ -39,10 +37,8 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
 
     private lateinit var postReddit : Array<PostList.DataPostList.ChildrenPost>
 
-    private lateinit var footerView: View
-
     private var redditPagination = RedditPagination()
-    private var limit = 10
+    private var limit = 7
     private var maxDisplayPosts = limit * 2 + limit
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -109,6 +105,7 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
         }
     }
     fun displayPost(container: ViewGroup , filter: String) {
+        resetScrollViewDisplay(container)
         RedditClient.getFilteredPost(filter, limit, object : Callback<PostList?> {
             override fun onFailure(call: Call<PostList?>, t: Throwable) {
                 // Handle the failure case
@@ -168,7 +165,6 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
         maxDisplayPosts -= limit
         if(maxDisplayPosts == 0){
             resetScrollViewDisplay(allPostsContainer)
-            (allPostsContainer.parent as ScrollView).post{ (allPostsContainer.parent as ScrollView).scrollTo(0,0) }
             maxDisplayPosts = limit * 2
         }
         displaySubreddit(searchSubreddit, allPostsContainer)
@@ -200,5 +196,6 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
 
     private fun resetScrollViewDisplay(view: ViewGroup){
         view.removeAllViewsInLayout()
+        (view.parent as ScrollView).post{ (view.parent as ScrollView).scrollTo(0,0) }
     }
 }

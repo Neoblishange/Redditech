@@ -3,7 +3,6 @@ package com.epitech.soraeven
 import android.content.Context
 import android.widget.LinearLayout
 import android.widget.ScrollView
-import kotlin.system.exitProcess
 
 class RedditPagination {
     var count: Int = 0
@@ -12,6 +11,7 @@ class RedditPagination {
     var lastId = ""
     var subredditUsername = ""
     var userIsSearchingSubreddit = false
+    var filter = "best"
 
     fun loadingNewData(context: Context, scrollView: ScrollView, limit: Int, typeOfData: TypeOfData, listener: Any?) {
         scrollView.setOnScrollChangeListener { _, _, _, _, _ ->
@@ -32,7 +32,7 @@ class RedditPagination {
                         }
                         TypeOfData.SUBREDDIT_POSTS -> {
                             val subreddit = Subreddit()
-                            subreddit.displayPosts(subredditUsername, scrollView.getChildAt(0) as LinearLayout, count, "t3_$lastId", listener as SubredditPostsListener)
+                            subreddit.getAllSubredditPostsData(subredditUsername, scrollView.getChildAt(0) as LinearLayout, filter, count, "t3_$lastId", listener as SubredditPostsListener)
                         }
                     }
                 }

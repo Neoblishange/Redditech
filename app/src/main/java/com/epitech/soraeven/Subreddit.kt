@@ -18,23 +18,17 @@ import com.epitech.soraeven.model.subreddit.DisplayInfoSubreddit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.math.max
 
 class Subreddit : AppCompatActivity(), SubredditPostsListener {
-    private lateinit var homeButton: Button
     private lateinit var allPostsContainer: LinearLayout
-    private lateinit var profileButton: Button
-
     private lateinit var searchBar: SearchBar
     private lateinit var bestButtonFilter: Button
     private lateinit var hotButtonFilter: Button
     private lateinit var newButtonFilter: Button
     private lateinit var topButtonFilter: Button
 
-    private lateinit var footerView: View
-
-    private var redditPagination = RedditPagination()
-    private var limit = 10
+    var redditPagination = RedditPagination()
+    private var limit = 7
     private var maxDisplayPosts = limit * 2 + limit
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -61,7 +55,7 @@ class Subreddit : AppCompatActivity(), SubredditPostsListener {
         //username subreddit
         val subredditUsername = intent.getStringExtra("subredditUsername")
 
-        displayPosts(subredditUsername, allPostsContainer, 0, "", listener = apply {  })
+        getAllSubredditPostsData(subredditUsername, allPostsContainer, "best", 0, "", listener = apply {  })
 
         RedditClient.getSubredditProfile(subredditUsername, object : Callback<DisplayInfoSubreddit?> {
             override fun onResponse(call: Call<DisplayInfoSubreddit?>, response: Response<DisplayInfoSubreddit?>) {
@@ -77,8 +71,9 @@ class Subreddit : AppCompatActivity(), SubredditPostsListener {
         redditPagination.loadingNewData(applicationContext, allPostsContainer.parent as ScrollView, limit, TypeOfData.SUBREDDIT_POSTS, listener = apply {  })
     }
 
-    fun displayPosts(subredditUsername: String?, container: ViewGroup, count: Int, lastId: String, listener: SubredditPostsListener) {
-        RedditClient.getSubredditPosts(subredditUsername, "new", 10, count, lastId, object : Callback<PostList?> {
+    fun getAllSubredditPostsData(subredditUsername: String?, container: ViewGroup, filter: String, count: Int, lastId: String, listener: SubredditPostsListener) {
+        resetScrollViewDisplay(container)
+        RedditClient.getSubredditPosts(subredditUsername, filter, limit, count, lastId, object : Callback<PostList?> {
             override fun onFailure(call: Call<PostList?>, t: Throwable) {
                 // Handle the failure case
             }
@@ -107,7 +102,6 @@ class Subreddit : AppCompatActivity(), SubredditPostsListener {
         maxDisplayPosts -= limit
         if(maxDisplayPosts == 0){
             resetScrollViewDisplay(allPostsContainer)
-            (allPostsContainer.parent as ScrollView).post{ (allPostsContainer.parent as ScrollView).scrollTo(0,0) }
             maxDisplayPosts = limit * 2
         }
         displaySubredditPosts(allPostsContainer, subredditPostsData)
@@ -118,6 +112,8 @@ class Subreddit : AppCompatActivity(), SubredditPostsListener {
 
     private fun resetScrollViewDisplay(view: ViewGroup){
         view.removeAllViewsInLayout()
+        (view.parent as ScrollView).post{ (view.parent as ScrollView).scrollTo(0,0) }
+        (view.parent as ScrollView).smoothScrollBy(0, 0)
     }
 }
 

@@ -4,10 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.view.View
-import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
 import com.epitech.soraeven.ImageLoading
 import com.epitech.soraeven.R
 import com.epitech.soraeven.model.PostList
