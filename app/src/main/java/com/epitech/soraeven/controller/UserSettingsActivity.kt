@@ -74,7 +74,7 @@ class UserSettingsActivity : AppCompatActivity(), View.OnClickListener {
 
             }
         })
- mDisplayLanguage = findViewById(R.id.selected_language_text_view)
+        mDisplayLanguage = findViewById(R.id.selected_language_text_view)
         mEnableFollowers = findViewById(R.id.allow_follower_switch)
         mNoProfanity = findViewById(R.id.nsfw_switch)
         mHideAds = findViewById(R.id.hide_ads_switch)

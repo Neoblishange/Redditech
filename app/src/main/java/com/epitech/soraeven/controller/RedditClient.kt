@@ -2,7 +2,6 @@ package com.epitech.soraeven.controller
 
 import android.content.Context
 import com.epitech.soraeven.MyApplication
-import com.epitech.soraeven.model.DataPostResult
 import com.epitech.soraeven.model.profil.UserSettings
 import com.epitech.soraeven.model.PostList
 import com.epitech.soraeven.model.profil.ProfilUser

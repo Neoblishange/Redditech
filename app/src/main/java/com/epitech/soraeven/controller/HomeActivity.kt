@@ -4,25 +4,25 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.epitech.soraeven.*
 import com.epitech.soraeven.model.PostList
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class HomeActivity : AppCompatActivity() {
     private val redirectUri = Uri.parse("soraeven://oauth2redirect")
-    private lateinit var profileButton: Button
     private lateinit var homeButton: Button
     private lateinit var allPostsContainer: LinearLayout
     private lateinit var homePage: ConstraintLayout
@@ -35,8 +35,6 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var postReddit : Array<PostList.DataPostList.ChildrenPost>
 
-
-    private lateinit var footerView: View
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,6 +75,7 @@ class HomeActivity : AppCompatActivity() {
                     val intent = Intent(this@HomeActivity, PostAndComments::class.java)
                     startActivity(intent)
                 }
+
             }
     }
 
@@ -113,8 +112,34 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
-    private fun joinSubreddit() {
+    private fun handleJoinButton() {
+        // If the user has already joined the community, he left it and vice versa
+        // Need the community status
+    }
+    private fun joinSubreddit(srName: String/*, communityIcon: ImageButton */) {
+        RedditClient.subscribeOrUnsubscribeToSubreddit(srName, "sub", object : Callback<ResponseBody?> {
+            override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
+                Toast.makeText(this@HomeActivity, "Joined", Toast.LENGTH_SHORT)
+            }
 
+            override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+                Toast.makeText(this@HomeActivity, "Failed to join", Toast.LENGTH_SHORT)
+            }
+
+        })
+    }
+
+    private fun leaveSubreddit(srName: String/*, communityIcon: ImageButton */) {
+        RedditClient.subscribeOrUnsubscribeToSubreddit(srName, "unsub", object : Callback<ResponseBody?> {
+            override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
+                Toast.makeText(this@HomeActivity, "Leaved", Toast.LENGTH_SHORT)
+            }
+
+            override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+                Toast.makeText(this@HomeActivity, "Failed to leave", Toast.LENGTH_SHORT)
+            }
+
+        })
     }
 
     private fun getViewsByTag(root: ViewGroup, tag: String): ArrayList<View>? {

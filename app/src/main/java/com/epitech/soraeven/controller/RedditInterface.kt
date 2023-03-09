@@ -1,7 +1,6 @@
 package com.epitech.soraeven.controller
 
 import com.epitech.soraeven.model.AccessToken
-import com.epitech.soraeven.model.DataPostResult
 import com.epitech.soraeven.model.profil.UserSettings
 import okhttp3.ResponseBody
 import com.epitech.soraeven.model.PostList
@@ -24,7 +23,7 @@ interface RedditInterface {
     @GET("{filter}")
     fun getFilteredPost(
         @Path("filter") filter: String,
-        @Query("limit") limit: String): Call<DataPostResult?>?
+        @Query("limit") limit: String): Call<PostList?>?
     @Headers("Accept: application/json")
     @GET("/api/v1/me/prefs")
     fun getUserSettings(): Call<UserSettings>
