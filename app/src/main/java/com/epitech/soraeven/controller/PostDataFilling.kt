@@ -5,12 +5,16 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.icu.text.SimpleDateFormat
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.epitech.soraeven.ImageLoading
 import com.epitech.soraeven.R
+import com.epitech.soraeven.RedditPostsMethods
+import com.epitech.soraeven.Subreddit
 import com.epitech.soraeven.model.PostList
 import java.sql.Date
 import okhttp3.ResponseBody
@@ -20,7 +24,7 @@ import retrofit2.Response
 
 class PostDataFilling constructor(context: Context): View(context){
     companion object {
-        fun fillPost( view: View ,data : PostList.DataPostList.ChildrenPost.ChildrenPostData?) {
+        fun fillPost(view: View, data : PostList.DataPostList.ChildrenPost.ChildrenPostData?) {
             val tvSubreddit = view.findViewById<TextView>(R.id.subreddit)
             val tvAuthor = view.findViewById<TextView>(R.id.author)
             val tvCreated_utc = view.findViewById<TextView>(R.id.created_utc)
@@ -30,11 +34,12 @@ class PostDataFilling constructor(context: Context): View(context){
             val tvcommentCount = view.findViewById<TextView>(R.id.commentCount)
             val upVote = view.findViewById<Button>(R.id.upVote)
             val downVote = view.findViewById<Button>(R.id.downVote)
+            val joinButton = view.findViewById<Button>(R.id.join)
 
             tvSubreddit.text = data?.subredditNamePrefixed
             val authorTextView = "By : " + data?.authorFullname
             tvAuthor.text = authorTextView
-            tvCreated_utc.text = data?.created_utc.toString()
+            tvCreated_utc.text = data?.created_utc?.toLong()?.let { unixDateToUTC(it) }
             tvTitle.text = data?.title
             tvVotes.text = data?.numberOfUpVotes.toString()
             tvcommentCount.text = data?.num_comments.toString()
@@ -96,6 +101,18 @@ class PostDataFilling constructor(context: Context): View(context){
                     }
                 }
             }
+
+            /*if(view.context is Subreddit) {
+                val parent = joinButton.parent as ViewGroup
+                parent.removeView(joinButton)
+            }
+            else {
+                joinButton.setOnClickListener {
+                    //need if else
+                    //RedditPostsMethods.leaveSubreddit(view.context, data.subreddit)
+                    //RedditPostsMethods.joinSubreddit(view.context, data.subreddit)
+                }
+            }*/
 
             if (ivThumbnail != null) {
 
