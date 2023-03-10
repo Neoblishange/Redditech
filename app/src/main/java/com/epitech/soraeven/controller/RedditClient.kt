@@ -61,7 +61,7 @@ object RedditClient {
     fun setUserSettings(userSettings: UserSettings, callback: Callback<UserSettings?>) {
         client.setUserSettings(userSettings).enqueue(callback)
     }
-    fun subscribeOrUnsubscribeToSubreddit(srName: String, action: String, callback: Callback<ResponseBody?>) {
+    fun subscribeOrUnsubscribeToSubreddit(srName: String?, action: String, callback: Callback<ResponseBody?>) {
         client.subscribeOrUnsubscribeToSubreddit(srName, action)?.enqueue(callback)
     }
     fun voteOnPost(name: String, dir: Int, callback: Callback<ResponseBody?>) {
@@ -90,5 +90,10 @@ object RedditClient {
             client.getSubredditPosts(subreddit, filter, limit, count, after)
                 ?.enqueue(callback)
         }
+    }
+
+    fun getMySubreddits(callback: Callback<SearchSubreddit?>){
+        client.getMySubreddits()
+            ?.enqueue(callback)
     }
 }

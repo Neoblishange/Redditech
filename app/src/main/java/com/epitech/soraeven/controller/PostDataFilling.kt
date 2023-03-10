@@ -102,17 +102,10 @@ class PostDataFilling constructor(context: Context): View(context){
                 }
             }
 
-            /*if(view.context is Subreddit) {
+            if(view.context is Subreddit || view.context is HomeActivity) {
                 val parent = joinButton.parent as ViewGroup
                 parent.removeView(joinButton)
             }
-            else {
-                joinButton.setOnClickListener {
-                    //need if else
-                    //RedditPostsMethods.leaveSubreddit(view.context, data.subreddit)
-                    //RedditPostsMethods.joinSubreddit(view.context, data.subreddit)
-                }
-            }*/
 
             if (ivThumbnail != null) {
 

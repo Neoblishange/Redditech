@@ -11,6 +11,7 @@ data class SearchSubreddit(
         ) {
             data class ChildrenSearchSubredditData(
                 var id: String,
+                var display_name: String,
                 var display_name_prefixed: String,
                 var subscribers: Int,
                 var community_icon: String,

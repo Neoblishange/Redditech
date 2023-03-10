@@ -79,4 +79,8 @@ interface RedditInterface {
         @Query("count") count: Int,
         @Query("after") after: String
     ): Call<PostList?>?
+
+    @Headers("Accept: application/json")
+    @GET("/subreddits/mine/subscriber")
+    fun getMySubreddits():Call<SearchSubreddit?>?
 }

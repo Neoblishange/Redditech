@@ -178,8 +178,27 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
     }
 
     companion object {
+        var mySubreddits = getMySubredditsJoined()
+
         fun getPostsData(i: Int, allPostsContainer: LinearLayout?, s: String) {
 
+        }
+
+        fun getMySubredditsJoined(): ArrayList<String> {
+            val mySubreddits = ArrayList<String>()
+            RedditClient.getMySubreddits(object : Callback<SearchSubreddit?> {
+                override fun onResponse(call: Call<SearchSubreddit?>, response: Response<SearchSubreddit?>) {
+                    val responseData: SearchSubreddit? = response.body()
+                    responseData?.data?.children?.forEach { subreddit ->
+                        mySubreddits.add(subreddit.data.display_name_prefixed)
+                    }
+                }
+
+                override fun onFailure(call: Call<SearchSubreddit?>, t: Throwable) {
+
+                }
+            })
+            return mySubreddits
         }
     }
 
@@ -219,6 +238,12 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
             }
             SubredditDataFilling.fillAllSubreddits(view, searchSubreddit.data.children[i].data)
         }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        finish();
+        startActivity(intent);
     }
 
     fun resetScrollViewDisplay(view: ViewGroup){
