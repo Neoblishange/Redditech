@@ -3,6 +3,8 @@ package com.epitech.soraeven
 import android.content.Context
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import com.epitech.soraeven.controller.HomeActivity
+import com.epitech.soraeven.controller.PostsListener
 
 class RedditPagination {
     var count: Int = 0
@@ -24,15 +26,47 @@ class RedditPagination {
                     loadingData = true
                     when(typeOfData){
                         TypeOfData.HOME_POSTS-> {
-
+                            val homeActivity = HomeActivity()
+                            var currentListener = if(listener is HomeActivity) {
+                                listener
+                            }
+                            else {
+                                (context as HomeActivity).apply {  }
+                            }
+                            homeActivity.getPostsData(
+                                scrollView.getChildAt(0) as LinearLayout,
+                                filter,
+                                count,
+                                "t3_$lastId",
+                                currentListener
+                            )
                         }
                         TypeOfData.SUBREDDITS_SEARCH -> {
                             val searchBar = SearchBar(context)
-                            searchBar.searchSubredditBar(searchedText, count, "t5_$lastId", listener as SearchListener)
+                            var currentListener = if(listener is HomeActivity) {
+                                listener
+                            }
+                            else {
+                                (context as HomeActivity).apply {  }
+                            }
+                            searchBar.searchSubredditBar((scrollView.getChildAt(0) as LinearLayout), searchedText, count, limit, "t5_$lastId", currentListener)
                         }
                         TypeOfData.SUBREDDIT_POSTS -> {
                             val subreddit = Subreddit()
-                            subreddit.getAllSubredditPostsData(subredditUsername, scrollView.getChildAt(0) as LinearLayout, filter, count, "t3_$lastId", listener as SubredditPostsListener)
+                            var currentListener = if(listener is Subreddit) {
+                                listener
+                            }
+                            else {
+                                (context as Subreddit).apply {  }
+                            }
+                            subreddit.getAllSubredditPostsData(
+                                subredditUsername,
+                                scrollView.getChildAt(0) as LinearLayout,
+                                filter,
+                                count,
+                                "t3_$lastId",
+                                currentListener
+                            )
                         }
                     }
                 }

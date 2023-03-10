@@ -49,8 +49,8 @@ object RedditClient {
             return retrofit!!.create(RedditInterface::class.java)
         }
 
-    fun getFilteredPost(filter: String, limit: Int, callback: Callback<PostList?>) {
-        client.getFilteredPost(filter, limit.toString())
+    fun getFilteredPost(filter: String, limit: Int, count: Int, after: String, callback: Callback<PostList?>) {
+        client.getFilteredPost(filter, limit, count, after)
             ?.enqueue(callback)
     }
 

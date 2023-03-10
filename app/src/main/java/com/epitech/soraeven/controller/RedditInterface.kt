@@ -23,7 +23,9 @@ interface RedditInterface {
     @GET("{filter}")
     fun getFilteredPost(
         @Path("filter") filter: String,
-        @Query("limit") limit: String): Call<PostList?>?
+        @Query("limit") limit: Int,
+        @Query("count") count: Int,
+        @Query("after") after: String): Call<PostList?>?
 
     @Headers("Accept: application/json")
     @GET("api/v1/me")

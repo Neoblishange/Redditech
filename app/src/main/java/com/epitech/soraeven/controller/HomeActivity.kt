@@ -1,5 +1,6 @@
 package com.epitech.soraeven.controller
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -22,7 +23,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeActivity : AppCompatActivity(), SearchListener  {
+class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
     private val redirectUri = Uri.parse("soraeven://oauth2redirect")
     private lateinit var homeButton: Button
     private lateinit var allPostsContainer: LinearLayout
@@ -37,7 +38,7 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
 
     private lateinit var postReddit : Array<PostList.DataPostList.ChildrenPost>
 
-    private var redditPagination = RedditPagination()
+    var redditPagination = RedditPagination()
     private var limit = 7
     private var maxDisplayPosts = limit * 2 + limit
 
@@ -67,7 +68,7 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
         }
 
         allPostsContainer = findViewById(R.id.allPostsLayout)
-        displayPost(allPostsContainer, "best")
+        getPostsData(allPostsContainer, "best", 0, "", listener = apply {  })
 
         homePage = findViewById<ConstraintLayout>(R.id.homePage)
         getViewsByTag(homePage, "community_icon")
@@ -88,7 +89,7 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
             applicationContext,
             (allPostsContainer.parent as ScrollView),
             limit,
-            TypeOfData.SUBREDDITS_SEARCH,
+            TypeOfData.HOME_POSTS,
             listener = apply {  }
         )
     }
@@ -104,9 +105,8 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
             }
         }
     }
-    fun displayPost(container: ViewGroup , filter: String) {
-        resetScrollViewDisplay(container)
-        RedditClient.getFilteredPost(filter, limit, object : Callback<PostList?> {
+    fun getPostsData(container: ViewGroup, filter: String, count: Int, lastId: String, listener: PostsListener) {
+        RedditClient.getFilteredPost(filter, limit, count, lastId, object : Callback<PostList?> {
             override fun onFailure(call: Call<PostList?>, t: Throwable) {
                 // Handle the failure case
             }
@@ -114,20 +114,37 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
             override fun onResponse(call: Call<PostList?>, response: Response<PostList?>) {
                 // Handle the success case
                 val responseData: PostList? = response.body()
-                postReddit = responseData?.data?.children!!
-                for (i in 0 until postReddit?.size as Int) {
-                    val view = LayoutInflater.from(container.context)
-                        .inflate(R.layout.post, container, false)
-                    view.tag = "community_icon"
-                    PostDataFilling.fillPost(view, postReddit[i].data)
-                    container.addView(view)
+                responseData?.let { data ->
+                    listener.onResult(data)
                 }
             }
         })
     }
 
+    override fun onResult(postsData: PostList) {
+        maxDisplayPosts -= limit
+        if(maxDisplayPosts == 0){
+            resetScrollViewDisplay(allPostsContainer)
+            maxDisplayPosts = limit * 2
+        }
+        displayPosts(allPostsContainer, postsData)
+        redditPagination.lastId = postsData.data.children[postsData.data.children.size - 1].data.id
+        redditPagination.loadingData = false
+    }
+
+    private fun displayPosts(container: ViewGroup, postsData: PostList){
+        val postReddit = postsData?.data?.children!!
+        for (i in 0 until postReddit.size) {
+            val view = LayoutInflater.from(container.context)
+                .inflate(R.layout.post, container, false)
+            view.tag = "community_icon"
+            PostDataFilling.fillPost(view, postReddit[i].data)
+            container.addView(view)
+        }
+    }
+
     private fun setListenerSearchBar(searchBar: SearchBar, container: ViewGroup){
-        searchBar.setupSearchBar(searchTextBar, listener = apply {  })
+        searchBar.setupSearchBar(searchTextBar, container, listener = apply {  })
     }
 
     private fun joinSubreddit() {
@@ -151,7 +168,7 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
     }
 
     companion object {
-        fun displayPost(i: Int, allPostsContainer: LinearLayout?, s: String) {
+        fun getPostsData(i: Int, allPostsContainer: LinearLayout?, s: String) {
 
         }
     }
@@ -175,7 +192,7 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
     //cancel search
     override fun onRemoveSearch() {
         resetScrollViewDisplay(allPostsContainer)
-        displayPost(allPostsContainer, "best")
+        getPostsData(allPostsContainer, "best", 0, "", listener = apply {  })
         redditPagination.userIsSearchingSubreddit = false
     }
 
@@ -196,6 +213,10 @@ class HomeActivity : AppCompatActivity(), SearchListener  {
 
     private fun resetScrollViewDisplay(view: ViewGroup){
         view.removeAllViewsInLayout()
-        (view.parent as ScrollView).post{ (view.parent as ScrollView).scrollTo(0,0) }
+        (view.parent as ScrollView).scrollY = 0
     }
+}
+
+interface PostsListener {
+    fun onResult(postsData: PostList)
 }

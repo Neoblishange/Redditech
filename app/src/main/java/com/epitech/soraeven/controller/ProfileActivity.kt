@@ -44,7 +44,7 @@ class ProfileActivity : AppCompatActivity() {
         footer.setupFooter(this@ProfileActivity)
 
         allPostsContainer = findViewById(R.id.allPostsLayout)
-        displayPost(7, allPostsContainer, "new")
+        displayPost(allPostsContainer, "new")
 
         //profile text views setup
         settingsDisplayName = findViewById(R.id.settings_display_name)
@@ -78,9 +78,8 @@ class ProfileActivity : AppCompatActivity() {
         })
     }
 
-    private fun displayPost(numberOfViews: Int, container: ViewGroup , filter: String) {
-
-        RedditClient.getFilteredPost(filter, 3, object : Callback<PostList?> {
+    private fun displayPost(container: ViewGroup , filter: String) {
+        RedditClient.getFilteredPost(filter, 3, 0, "", object : Callback<PostList?> {
             override fun onFailure(call: Call<PostList?>, t: Throwable) {
                 // Handle the failure case
             }
@@ -94,9 +93,7 @@ class ProfileActivity : AppCompatActivity() {
                         .inflate(R.layout.post, container, false)
                     view.tag = "community_icon"
                     PostDataFilling.fillPost(view, postReddit[i].data)
-                    println("yoooo "+ i +" = "+ postReddit[i].data.title )
                     container.addView(view)
-
                 }
             }
         })

@@ -112,8 +112,7 @@ class Subreddit : AppCompatActivity(), SubredditPostsListener {
 
     private fun resetScrollViewDisplay(view: ViewGroup){
         view.removeAllViewsInLayout()
-        (view.parent as ScrollView).post{ (view.parent as ScrollView).scrollTo(0,0) }
-        (view.parent as ScrollView).smoothScrollBy(0, 0)
+        (view.parent as ScrollView).scrollY = 0
     }
 }
 
