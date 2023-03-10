@@ -2,11 +2,13 @@ package com.epitech.soraeven.controller
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.icu.text.SimpleDateFormat
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.epitech.soraeven.ImageLoading
 import com.epitech.soraeven.R
 import com.epitech.soraeven.model.PostList
@@ -41,15 +43,57 @@ class PostDataFilling constructor(context: Context): View(context){
 
             val originalVotes: Int = data?.numberOfUpVotes?.toInt()!!
 
+            val postVote = data.likes
+            if(postVote == "true"){
+                upVote.setBackgroundResource(R.drawable.filled_upchevron)
+                upVote.tag = true
+                downVote.tag = false
+            }
+            else if(postVote == "false") {
+                downVote.setBackgroundResource(R.drawable.filled_downchevron)
+                upVote.tag = false
+                downVote.tag = true
+            }
+            else {
+                upVote.setBackgroundResource(R.drawable.upchevron)
+                downVote.setBackgroundResource(R.drawable.downchevron)
+                upVote.tag = false
+                downVote.tag = false
+            }
+
             upVote.setOnClickListener {
                 if (tvVotes != null) {
-                    handleVoteOnPost(upVote.text as String, 1, tvVotes, originalVotes )
+                    if(upVote.tag == false) {
+                        handleVoteOnPost(upVote.text as String, 1, tvVotes, originalVotes)
+                        upVote.setBackgroundResource(R.drawable.filled_upchevron)
+                        downVote.setBackgroundResource(R.drawable.downchevron)
+                        upVote.tag = true
+                        downVote.tag = false
+                    }
+                    else {
+                        handleVoteOnPost(upVote.text as String, 0, tvVotes, originalVotes)
+                        upVote.setBackgroundResource(R.drawable.upchevron)
+                        upVote.tag = false
+                        downVote.tag = false
+                    }
                 }
             }
 
             downVote.setOnClickListener {
                 if (tvVotes != null) {
-                    handleVoteOnPost(downVote.text as String, -1, tvVotes, originalVotes)
+                    if(downVote.tag == false) {
+                        handleVoteOnPost(downVote.text as String, -1, tvVotes, originalVotes)
+                        upVote.setBackgroundResource(R.drawable.upchevron)
+                        downVote.setBackgroundResource(R.drawable.filled_downchevron)
+                        upVote.tag = false
+                        downVote.tag = true
+                    }
+                    else {
+                        handleVoteOnPost(downVote.text as String, 0, tvVotes, originalVotes)
+                        downVote.setBackgroundResource(R.drawable.downchevron)
+                        upVote.tag = false
+                        downVote.tag = false
+                    }
                 }
             }
 

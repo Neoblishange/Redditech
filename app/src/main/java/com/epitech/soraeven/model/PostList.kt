@@ -28,7 +28,8 @@ data class PostList (
                 var linkFlairText: String,
                 var preview: Preview,
                 var created_utc: Int,
-                var num_comments: Int
+                var num_comments: Int,
+                var likes: String
             ){
                 data class Preview(
                     var images: ArrayList<Image>,
