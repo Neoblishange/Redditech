@@ -102,8 +102,10 @@ class SearchBar (private val context: Context){
                 }
 
                 if(context is HomeActivity){
+                    var redditPagination = context.redditPagination
+                    redditPagination.filter = filter
                     allPostsContainer = context.findViewById(R.id.allPostsLayout)
-                    context.redditPagination.loadingNewData(
+                    redditPagination.loadingNewData(
                         context,
                         (allPostsContainer.parent as ScrollView),
                         context.postsLimit,

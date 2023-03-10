@@ -128,13 +128,15 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
     }
 
     override fun onResult(postsData: PostList) {
-        if(maxDisplayPosts == 0){
+        if(maxDisplayPosts == 0 && postsData.data.children.isNotEmpty()){
             resetScrollViewDisplay(allPostsContainer)
             maxDisplayPosts = postsLimit * 2
         }
-        maxDisplayPosts -= postsLimit
+        if(postsData.data.children.isNotEmpty()) {
+            maxDisplayPosts -= postsLimit
+            redditPagination.lastId = postsData.data.children[postsData.data.children.size - 1].data.id
+        }
         displayPosts(allPostsContainer, postsData)
-        redditPagination.lastId = postsData.data.children[postsData.data.children.size - 1].data.id
         redditPagination.loadingData = false
     }
 
@@ -157,31 +159,7 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
         // If the user has already joined the community, he left it and vice versa
         // Need the community status
     }
-    private fun joinSubreddit(srName: String/*, communityIcon: ImageButton */) {
-        RedditClient.subscribeOrUnsubscribeToSubreddit(srName, "sub", object : Callback<ResponseBody?> {
-            override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
-                Toast.makeText(this@HomeActivity, "Joined", Toast.LENGTH_SHORT)
-            }
 
-            override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
-                Toast.makeText(this@HomeActivity, "Failed to join", Toast.LENGTH_SHORT)
-            }
-
-        })
-    }
-
-    private fun leaveSubreddit(srName: String/*, communityIcon: ImageButton */) {
-        RedditClient.subscribeOrUnsubscribeToSubreddit(srName, "unsub", object : Callback<ResponseBody?> {
-            override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
-                Toast.makeText(this@HomeActivity, "Leaved", Toast.LENGTH_SHORT)
-            }
-
-            override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
-                Toast.makeText(this@HomeActivity, "Failed to leave", Toast.LENGTH_SHORT)
-            }
-
-        })
-    }
 
     private fun getViewsByTag(root: ViewGroup, tag: String): ArrayList<View>? {
         val views = ArrayList<View>()
