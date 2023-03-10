@@ -10,23 +10,26 @@ import com.epitech.soraeven.ImageLoading
 import com.epitech.soraeven.R
 import com.epitech.soraeven.model.PostList
 import java.sql.Date
+import java.util.StringJoiner
 
 class PostDataFilling constructor(context: Context): View(context){
     companion object {
         fun fillPost( view: View ,data : PostList.DataPostList.ChildrenPost.ChildrenPostData?) {
+            val tvSubreddit = view.findViewById<TextView>(R.id.subreddit)
+            val tvAuthor = view.findViewById<TextView>(R.id.author)
+            val tvCreated_utc = view.findViewById<TextView>(R.id.created_utc)
+            val tvTitle = view.findViewById<TextView>(R.id.title)
+            val ivThumbnail = view.findViewById<ImageView>(R.id.thumbnail)
+            val tvVotes = view.findViewById<TextView>(R.id.votes)
+            val tvcommentCount = view.findViewById<TextView>(R.id.commentCount)
 
-            val tvAuthor = (view)?.findViewById<TextView>(R.id.author)
-            val tvCreated_utc = (view)?.findViewById<TextView>(R.id.created_utc)
-            val tvTitle = (view)?.findViewById<TextView>(R.id.title)
-            val ivThumbnail = (view)?.findViewById<ImageView>(R.id.thumbnail)
-            val tvVotes = (view)?.findViewById<TextView>(R.id.votes)
-            val tvcommentCount = (view)?.findViewById<TextView>(R.id.commentCount)
-
-            tvAuthor?.text = data?.authorFullname
-            tvCreated_utc?.text = data?.created_utc?.let { unixDateToUTC(it.toLong()) }
-            tvTitle?.text = data?.title
-            tvVotes?.text = data?.numberOfUpVotes.toString()
-            tvcommentCount?.text = data?.num_comments.toString()
+            tvSubreddit.text = data?.subredditNamePrefixed
+            val authorTextView = "By : " + data?.authorFullname
+            tvAuthor.text = authorTextView
+            tvCreated_utc.text = data?.created_utc?.let { unixDateToUTC(it.toLong()) }
+            tvTitle.text = data?.title
+            tvVotes.text = data?.numberOfUpVotes.toString()
+            tvcommentCount.text = data?.num_comments.toString()
 
             if (ivThumbnail != null) {
 
@@ -43,9 +46,6 @@ class PostDataFilling constructor(context: Context): View(context){
                     ivThumbnail.visibility = VISIBLE
                     val imageLoading = ImageLoading()
                     imageLoading.customViewIntegration(view.context, extractedContentImageUrl, ivThumbnail)
-                    /*Glide.with(view)
-                        .load(extractedContentImageUrl)
-                        .into(ivThumbnail)*/
                 }else {
                     ivThumbnail.visibility = GONE
                 }
