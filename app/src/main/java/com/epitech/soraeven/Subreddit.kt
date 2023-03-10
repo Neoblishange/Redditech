@@ -72,7 +72,6 @@ class Subreddit : AppCompatActivity(), SubredditPostsListener {
     }
 
     fun getAllSubredditPostsData(subredditUsername: String?, container: ViewGroup, filter: String, count: Int, lastId: String, listener: SubredditPostsListener) {
-        resetScrollViewDisplay(container)
         RedditClient.getSubredditPosts(subredditUsername, filter, limit, count, lastId, object : Callback<PostList?> {
             override fun onFailure(call: Call<PostList?>, t: Throwable) {
                 // Handle the failure case
