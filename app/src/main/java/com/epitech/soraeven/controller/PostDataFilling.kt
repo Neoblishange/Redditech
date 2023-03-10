@@ -54,15 +54,12 @@ class PostDataFilling constructor(context: Context): View(context){
             }
 
             if (ivThumbnail != null) {
-
                 if (data?.preview?.images?.get(0)?.source?.url != null) {
                     val baseUrlProfileImage = data?.preview?.images?.get(0)?.source?.url
                     val indexerProfileImage = baseUrlProfileImage?.indexOf("?")
-                    var extractedContentImageUrl = if (indexerProfileImage!! >= 0) baseUrlProfileImage.substring(0, indexerProfileImage) else baseUrlProfileImage
-                    if(extractedContentImageUrl.contains("external")) {
-                        extractedContentImageUrl = extractedContentImageUrl.replace("external-preview", "i")
-                    }
-                    else {
+                    var extractedContentImageUrl = baseUrlProfileImage
+                    if (!baseUrlProfileImage?.contains("external")!!) {
+                        extractedContentImageUrl = if (indexerProfileImage!! >= 0) baseUrlProfileImage.substring(0, indexerProfileImage) else baseUrlProfileImage
                         extractedContentImageUrl = extractedContentImageUrl.replace("preview", "i")
                     }
                     ivThumbnail.visibility = VISIBLE
@@ -71,7 +68,6 @@ class PostDataFilling constructor(context: Context): View(context){
                 }else {
                     ivThumbnail.visibility = GONE
                 }
-
             }
         }
 

@@ -18,10 +18,10 @@ class ImageLoading {
     }
 
     fun customViewIntegration(context: Context, url: String?, view: View){
-        val indexer = url?.indexOf("?")
-        val extractedImageURL = if (indexer!! >= 0) url.substring(0, indexer) else url
+        //val indexer = url?.indexOf("?")
+        //val extractedImageURL = if (indexer!! >= 0) url.substring(0, indexer) else url
         Glide.with(context)
-            .load(extractedImageURL)
+            .load(url/*extractedImageURL*/)
             .into(object : CustomViewTarget<View, Drawable>(view) {
                 override fun onResourceReady(
                     resource: Drawable,
