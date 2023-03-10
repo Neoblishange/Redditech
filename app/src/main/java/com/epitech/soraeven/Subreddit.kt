@@ -28,8 +28,8 @@ class Subreddit : AppCompatActivity(), SubredditPostsListener {
     private lateinit var topButtonFilter: Button
 
     var redditPagination = RedditPagination()
-    private var limit = 6
-    private var maxDisplayPosts = limit * 2
+    var limit = 6
+    var maxDisplayPosts = limit * 2
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {

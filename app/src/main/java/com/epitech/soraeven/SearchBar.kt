@@ -24,20 +24,20 @@ class SearchBar (private val context: Context){
     private lateinit var mapFilterButton: HashMap<Button, Boolean>
     private lateinit var allPostsContainer: LinearLayout
 
-    private var limit = 7
-
     fun setupSearchBar(searchTextBar: EditText, container: ViewGroup, listener: SearchListener){
         var text = ""
         val delay = 1500L
         val handler = Handler()
         val runnable = Runnable {
             if(text.isNotEmpty()) {
-                searchSubredditBar(container, text, 0, limit, "", listener)
                 if(context is HomeActivity) {
+                    searchSubredditBar(container, text, 0, context.subredditsLimit, "", listener)
+                    context.maxDisplaySubreddits = context.subredditsLimit * 2
+                    context.resetScrollViewDisplay(container)
                     context.redditPagination.loadingNewData(
                         context,
                         (container.parent as ScrollView),
-                        limit,
+                        context.subredditsLimit,
                         TypeOfData.SUBREDDITS_SEARCH,
                         listener = apply { }
                     )
@@ -106,7 +106,7 @@ class SearchBar (private val context: Context){
                     context.redditPagination.loadingNewData(
                         context,
                         (allPostsContainer.parent as ScrollView),
-                        limit,
+                        context.postsLimit,
                         TypeOfData.HOME_POSTS,
                         listener = apply {  }
                     )
@@ -118,7 +118,7 @@ class SearchBar (private val context: Context){
                     context.redditPagination.loadingNewData(
                         context,
                         (allPostsContainer.parent as ScrollView),
-                        limit,
+                        context.limit,
                         TypeOfData.SUBREDDIT_POSTS,
                         listener = apply {  }
                     )
@@ -137,7 +137,6 @@ class SearchBar (private val context: Context){
     }
 
     fun searchSubredditBar(container: ViewGroup, text: String, count: Int, limit: Int, lastId: String, listener: SearchListener){
-        println("PASSE : " + text + " | " + limit + " | " + count + " | " + lastId)
         RedditClient.searchSubreddit(text, limit, count, lastId, object : Callback<SearchSubreddit?> {
             override fun onResponse(call: Call<SearchSubreddit?>, response: Response<SearchSubreddit?>) {
                 val responseData: SearchSubreddit? = response.body()

@@ -1,6 +1,5 @@
 package com.epitech.soraeven.controller
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -41,8 +40,10 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
     private lateinit var postReddit : Array<PostList.DataPostList.ChildrenPost>
 
     var redditPagination = RedditPagination()
-    private var limit = 6
-    private var maxDisplayPosts = limit * 2
+    var postsLimit = 6
+    var subredditsLimit = 10
+    var maxDisplayPosts = postsLimit * 2
+    var maxDisplaySubreddits = subredditsLimit * 2
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,7 +91,7 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
         redditPagination.loadingNewData(
             applicationContext,
             (allPostsContainer.parent as ScrollView),
-            limit,
+            postsLimit,
             TypeOfData.HOME_POSTS,
             listener = apply {  }
         )
@@ -111,7 +112,7 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
         if(count == 0 && lastId.isEmpty()){
             maxDisplayPosts = 0
         }
-        RedditClient.getFilteredPost(filter, limit, count, lastId, object : Callback<PostList?> {
+        RedditClient.getFilteredPost(filter, postsLimit, count, lastId, object : Callback<PostList?> {
             override fun onFailure(call: Call<PostList?>, t: Throwable) {
                 // Handle the failure case
             }
@@ -129,9 +130,9 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
     override fun onResult(postsData: PostList) {
         if(maxDisplayPosts == 0){
             resetScrollViewDisplay(allPostsContainer)
-            maxDisplayPosts = limit * 2
+            maxDisplayPosts = postsLimit * 2
         }
-        maxDisplayPosts -= limit
+        maxDisplayPosts -= postsLimit
         displayPosts(allPostsContainer, postsData)
         redditPagination.lastId = postsData.data.children[postsData.data.children.size - 1].data.id
         redditPagination.loadingData = false
@@ -210,11 +211,11 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
             resetScrollViewDisplay(allPostsContainer)
             redditPagination.userIsSearchingSubreddit = true
         }
-        maxDisplayPosts -= limit
-        if(maxDisplayPosts == 0){
+        if(maxDisplaySubreddits == 0){
             resetScrollViewDisplay(allPostsContainer)
-            maxDisplayPosts = limit * 2
+            maxDisplaySubreddits = subredditsLimit * 2
         }
+        maxDisplaySubreddits -= subredditsLimit
         displaySubreddit(searchSubreddit, allPostsContainer)
         redditPagination.searchedText = text
         redditPagination.loadingData = false
@@ -242,7 +243,7 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
         }
     }
 
-    private fun resetScrollViewDisplay(view: ViewGroup){
+    fun resetScrollViewDisplay(view: ViewGroup){
         view.removeAllViewsInLayout()
         (view.parent as ScrollView).scrollY = 0
     }
