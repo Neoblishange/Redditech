@@ -2,6 +2,8 @@ package com.epitech.soraeven.controller
 
 import com.epitech.soraeven.Subreddit
 import com.epitech.soraeven.model.AccessToken
+import com.epitech.soraeven.model.profil.UserSettings
+import okhttp3.ResponseBody
 import com.epitech.soraeven.model.PostList
 import com.epitech.soraeven.model.profil.ProfilUser
 import com.epitech.soraeven.model.profil.SubredditProfilUser
@@ -26,6 +28,28 @@ interface RedditInterface {
         @Query("limit") limit: Int,
         @Query("count") count: Int,
         @Query("after") after: String): Call<PostList?>?
+
+    @Headers("Accept: application/json")
+    @GET("/api/v1/me/prefs")
+    fun getUserSettings(): Call<UserSettings>
+
+    @Headers("Accept: application/json")
+    @PATCH("/api/v1/me/prefs")
+    fun setUserSettings(@Body userSettings: UserSettings): Call<UserSettings>
+
+    @POST("/api/subscribe")
+    @FormUrlEncoded
+    fun subscribeOrUnsubscribeToSubreddit(
+        @Field("sr_name") subredditName: String?,
+        @Field("action") action: String?
+    ): Call<ResponseBody?>?
+
+    @POST("/api/vote")
+    @FormUrlEncoded
+    fun voteOnPost(
+        @Field("id") name: String,
+        @Field("dir") dir: Int
+    ): Call<ResponseBody?>?
 
     @Headers("Accept: application/json")
     @GET("api/v1/me")

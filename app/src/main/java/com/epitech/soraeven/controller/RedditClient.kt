@@ -2,6 +2,7 @@ package com.epitech.soraeven.controller
 
 import android.content.Context
 import com.epitech.soraeven.MyApplication
+import com.epitech.soraeven.model.profil.UserSettings
 import com.epitech.soraeven.Subreddit
 import com.epitech.soraeven.model.PostList
 import com.epitech.soraeven.model.profil.ProfilUser
@@ -9,6 +10,7 @@ import com.epitech.soraeven.model.subreddit.DisplayInfoSubreddit
 import com.epitech.soraeven.model.subreddit.SearchSubreddit
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -52,6 +54,18 @@ object RedditClient {
     fun getFilteredPost(filter: String, limit: Int, count: Int, after: String, callback: Callback<PostList?>) {
         client.getFilteredPost(filter, limit, count, after)
             ?.enqueue(callback)
+    }
+    fun getUserSettings(callback: Callback<UserSettings?>) {
+        client.getUserSettings().enqueue(callback)
+    }
+    fun setUserSettings(userSettings: UserSettings, callback: Callback<UserSettings?>) {
+        client.setUserSettings(userSettings).enqueue(callback)
+    }
+    fun subscribeOrUnsubscribeToSubreddit(srName: String, action: String, callback: Callback<ResponseBody?>) {
+        client.subscribeOrUnsubscribeToSubreddit(srName, action)?.enqueue(callback)
+    }
+    fun voteOnPost(name: String, dir: Int, callback: Callback<ResponseBody?>) {
+        client.voteOnPost(name, dir)?.enqueue(callback)
     }
 
     fun getProfile(callback: Callback<ProfilUser?>){
