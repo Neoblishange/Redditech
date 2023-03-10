@@ -39,8 +39,8 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
     private lateinit var postReddit : Array<PostList.DataPostList.ChildrenPost>
 
     var redditPagination = RedditPagination()
-    private var limit = 7
-    private var maxDisplayPosts = limit * 2 + limit
+    private var limit = 6
+    private var maxDisplayPosts = limit * 2
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,6 +106,9 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
         }
     }
     fun getPostsData(container: ViewGroup, filter: String, count: Int, lastId: String, listener: PostsListener) {
+        if(count == 0 && lastId.isEmpty()){
+            maxDisplayPosts = 0
+        }
         RedditClient.getFilteredPost(filter, limit, count, lastId, object : Callback<PostList?> {
             override fun onFailure(call: Call<PostList?>, t: Throwable) {
                 // Handle the failure case
@@ -122,11 +125,11 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
     }
 
     override fun onResult(postsData: PostList) {
-        maxDisplayPosts -= limit
         if(maxDisplayPosts == 0){
             resetScrollViewDisplay(allPostsContainer)
             maxDisplayPosts = limit * 2
         }
+        maxDisplayPosts -= limit
         displayPosts(allPostsContainer, postsData)
         redditPagination.lastId = postsData.data.children[postsData.data.children.size - 1].data.id
         redditPagination.loadingData = false

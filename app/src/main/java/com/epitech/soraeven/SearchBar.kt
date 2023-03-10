@@ -128,8 +128,8 @@ class SearchBar (private val context: Context){
                         redditPagination.subredditUsername,
                         allPostsContainer,
                         filter,
-                        redditPagination.count,
-                        redditPagination.lastId,
+                        0,
+                        "",
                         context.apply {  })
                 }
             }

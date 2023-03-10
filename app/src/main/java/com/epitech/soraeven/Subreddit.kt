@@ -28,8 +28,8 @@ class Subreddit : AppCompatActivity(), SubredditPostsListener {
     private lateinit var topButtonFilter: Button
 
     var redditPagination = RedditPagination()
-    private var limit = 7
-    private var maxDisplayPosts = limit * 2 + limit
+    private var limit = 6
+    private var maxDisplayPosts = limit * 2
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +72,9 @@ class Subreddit : AppCompatActivity(), SubredditPostsListener {
     }
 
     fun getAllSubredditPostsData(subredditUsername: String?, container: ViewGroup, filter: String, count: Int, lastId: String, listener: SubredditPostsListener) {
+        if(count == 0 && lastId.isEmpty()){
+            maxDisplayPosts = 0
+        }
         RedditClient.getSubredditPosts(subredditUsername, filter, limit, count, lastId, object : Callback<PostList?> {
             override fun onFailure(call: Call<PostList?>, t: Throwable) {
                 // Handle the failure case
@@ -98,11 +101,11 @@ class Subreddit : AppCompatActivity(), SubredditPostsListener {
     }
 
     override fun onResult(subredditUsername: String?, subredditPostsData: PostList) {
-        maxDisplayPosts -= limit
         if(maxDisplayPosts == 0){
             resetScrollViewDisplay(allPostsContainer)
             maxDisplayPosts = limit * 2
         }
+        maxDisplayPosts -= limit
         displaySubredditPosts(allPostsContainer, subredditPostsData)
         redditPagination.subredditUsername = subredditUsername!!
         redditPagination.lastId = subredditPostsData.data.children[subredditPostsData.data.children.size - 1].data.id
