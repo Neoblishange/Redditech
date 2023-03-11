@@ -28,7 +28,9 @@ data class PostList (
                 var linkFlairText: String,
                 var preview: Preview,
                 var created_utc: Int,
-                var num_comments: Int
+                var num_comments: Int,
+                @SerializedName("media_embed")
+                var mediaEmbed: MediaEmbed?
             ){
                 data class Preview(
                     var images: ArrayList<Image>,
@@ -51,6 +53,9 @@ data class PostList (
                         )
                     }
                 }
+                data class MediaEmbed(
+                    var content: String?
+                )
             }
         }
     }
