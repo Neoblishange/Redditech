@@ -22,7 +22,7 @@ interface RedditInterface {
                        @Field("code") code: String): Call<AccessToken?>?
 
     @Headers("Accept: application/json")
-    @GET("{filter}")
+    @GET("{filter}?raw_json=1")
     fun getFilteredPost(
         @Path("filter") filter: String,
         @Query("limit") limit: Int,

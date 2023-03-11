@@ -92,7 +92,7 @@ class ProfileActivity : AppCompatActivity() {
                     val view = LayoutInflater.from(container.context)
                         .inflate(R.layout.post, container, false)
                     view.tag = "community_icon"
-                    PostDataFilling.fillPost(view, postReddit[i].data)
+                    PostDataFilling.fillPost(view, postReddit[i].data, this@ProfileActivity)
                     container.addView(view)
                 }
             }

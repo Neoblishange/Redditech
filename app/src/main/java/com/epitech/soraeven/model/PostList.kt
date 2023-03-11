@@ -30,6 +30,8 @@ data class PostList (
                 var created_utc: Int,
                 var num_comments: Int,
                 var likes: String
+                @SerializedName("media_embed")
+                var mediaEmbed: MediaEmbed?
             ){
                 data class Preview(
                     var images: ArrayList<Image>,
@@ -52,6 +54,9 @@ data class PostList (
                         )
                     }
                 }
+                data class MediaEmbed(
+                    var content: String?
+                )
             }
         }
     }

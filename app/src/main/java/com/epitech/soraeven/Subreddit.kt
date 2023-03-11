@@ -1,5 +1,6 @@
 package com.epitech.soraeven
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -96,7 +97,7 @@ class Subreddit : AppCompatActivity(), SubredditPostsListener {
                 .inflate(R.layout.post, container, false)
             view.tag = "community_icon"
             container.addView(view)
-            PostDataFilling.fillPost(view, subredditPostsData.data.children[i].data)
+            PostDataFilling.fillPost(view, subredditPostsData.data.children[i].data, this@Subreddit)
         }
     }
 
