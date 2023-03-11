@@ -1,5 +1,6 @@
 package com.epitech.soraeven.controller
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -7,11 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.ScrollView
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +19,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
+class HomeActivity : AppCompatActivity(), SearchListener, PostsListener {
     private val redirectUri = Uri.parse("soraeven://oauth2redirect")
     private lateinit var homeButton: Button
     private lateinit var allPostsContainer: LinearLayout
@@ -69,7 +66,6 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
         }
 
         allPostsContainer = findViewById(R.id.allPostsLayout)
-        getPostsData(allPostsContainer, "best", 0, "", listener = apply {  })
 
         homePage = findViewById<ConstraintLayout>(R.id.homePage)
         getViewsByTag(homePage, "community_icon")
@@ -86,28 +82,48 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
             }
 
         setListenerSearchBar(searchBar, allPostsContainer)
-        redditPagination.loadingNewData(
-            applicationContext,
-            (allPostsContainer.parent as ScrollView),
-            postsLimit,
-            TypeOfData.HOME_POSTS,
-            listener = apply {  }
-        )
     }
 
     override fun onResume() {
         super.onResume()
-        val uri: Uri? = intent.data
-        if (uri != null && uri.toString().startsWith(redirectUri.toString())) {
-            if (uri.toString().contains("access_denied")) {
-                startActivity(Intent(this@HomeActivity, MainActivity::class.java))
-            }
-            val code = uri.getQueryParameter("code")
-            val authenticator = RedditAuthenticator(this)
-            if (code != null) {
-                authenticator.authenticate(code)
+        val accessToken = MyApplication.staticContext?.getSharedPreferences("my_app", Context.MODE_PRIVATE)?.getString("access_token", null)
+        if (accessToken != null) {
+            getPostsData(allPostsContainer, "best", 0, "", listener = apply {  })
+            redditPagination.loadingNewData(
+                applicationContext,
+                (allPostsContainer.parent as ScrollView),
+                postsLimit,
+                TypeOfData.HOME_POSTS,
+                listener = apply {  }
+            )
+        } else {
+            val uri: Uri? = intent.data
+            if (uri != null && uri.toString().startsWith(redirectUri.toString())) {
+                if (uri.toString().contains("access_denied")) {
+                    startActivity(Intent(this@HomeActivity, MainActivity::class.java))
+                }
+                val code = uri.getQueryParameter("code")
+                val authenticator = RedditAuthenticator(this)
+                if (code != null) {
+                    authenticator.authenticate(code) { success ->
+                        if (success) {
+                            getPostsData(allPostsContainer, "best", 0, "", listener = apply {  })
+                            redditPagination.loadingNewData(
+                                applicationContext,
+                                (allPostsContainer.parent as ScrollView),
+                                postsLimit,
+                                TypeOfData.HOME_POSTS,
+                                listener = apply {  }
+                            )
+                        } else {
+                            Toast.makeText(this@HomeActivity, "Failed to authenticate", Toast.LENGTH_SHORT)
+                            startActivity(Intent(this@HomeActivity, MainActivity::class.java))
+                        }
+                    }
+                }
             }
         }
+
     }
     fun getPostsData(container: ViewGroup, filter: String, count: Int, lastId: String, listener: PostsListener) {
         if(count == 0 && lastId.isEmpty()){

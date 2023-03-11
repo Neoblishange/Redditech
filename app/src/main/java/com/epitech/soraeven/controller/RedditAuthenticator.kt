@@ -22,7 +22,7 @@ class RedditAuthenticator(private val context: Context) {
     private val retrofit: Retrofit = builder.build()
     private val client = retrofit.create(RedditInterface::class.java)
 
-    fun authenticate(code: String) {
+    fun authenticate(code: String, callback: (Boolean) -> Unit) {
         val credentials: String = Credentials.basic(clientId, clientSecret)
         val accessTokenCall: Call<AccessToken?>? =
             client.getAccessToken(credentials,
@@ -33,6 +33,7 @@ class RedditAuthenticator(private val context: Context) {
         accessTokenCall?.enqueue(object: Callback<AccessToken?> {
             override fun onFailure(call: Call<AccessToken?>, t: Throwable) {
                 Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
+                callback(false)
             }
             override fun onResponse(
                 call: Call<AccessToken?>,
@@ -45,6 +46,7 @@ class RedditAuthenticator(private val context: Context) {
                     editor.putString("access_token", accessToken)
                     editor.apply()
                     println(accessToken)
+                    callback(true)
                 }
             }
         })
