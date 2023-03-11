@@ -86,17 +86,8 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener {
 
     override fun onResume() {
         super.onResume()
-        val accessToken = MyApplication.staticContext?.getSharedPreferences("my_app", Context.MODE_PRIVATE)?.getString("access_token", null)
-        if (accessToken != null) {
-            getPostsData(allPostsContainer, "best", 0, "", listener = apply {  })
-            redditPagination.loadingNewData(
-                applicationContext,
-                (allPostsContainer.parent as ScrollView),
-                postsLimit,
-                TypeOfData.HOME_POSTS,
-                listener = apply {  }
-            )
-        } else {
+        val fromActivity = intent.getStringExtra("fromActivity")
+        if (fromActivity == "MainActivity") {
             val uri: Uri? = intent.data
             if (uri != null && uri.toString().startsWith(redirectUri.toString())) {
                 if (uri.toString().contains("access_denied")) {
@@ -122,8 +113,16 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener {
                     }
                 }
             }
+        } else {
+            getPostsData(allPostsContainer, "best", 0, "", listener = apply {  })
+            redditPagination.loadingNewData(
+                applicationContext,
+                (allPostsContainer.parent as ScrollView),
+                postsLimit,
+                TypeOfData.HOME_POSTS,
+                listener = apply {  }
+            )
         }
-
     }
     fun getPostsData(container: ViewGroup, filter: String, count: Int, lastId: String, listener: PostsListener) {
         if(count == 0 && lastId.isEmpty()){

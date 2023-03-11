@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         mLoginButton = findViewById(R.id.loginButton)
         mLoginButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, authUrl)
+            intent.putExtra("fromActivity", "MainActivity")
             startActivity(intent)
         }
     }
