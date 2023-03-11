@@ -86,8 +86,12 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener {
 
     override fun onResume() {
         super.onResume()
-        val fromActivity = intent.getStringExtra("fromActivity")
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val fromActivity = sharedPreferences.getString("fromActivity", "")
         if (fromActivity == "MainActivity") {
+            sharedPreferences.edit()
+                .putString("fromActivity", "")
+                .apply()
             val uri: Uri? = intent.data
             if (uri != null && uri.toString().startsWith(redirectUri.toString())) {
                 if (uri.toString().contains("access_denied")) {

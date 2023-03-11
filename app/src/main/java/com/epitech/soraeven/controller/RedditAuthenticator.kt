@@ -1,6 +1,7 @@
 package com.epitech.soraeven.controller
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.epitech.soraeven.model.AccessToken
 import okhttp3.Credentials
@@ -45,7 +46,7 @@ class RedditAuthenticator(private val context: Context) {
                     val editor = preferences.edit()
                     editor.putString("access_token", accessToken)
                     editor.apply()
-                    println(accessToken)
+                    Log.d("AUTHENTICATION", "Access_token: $accessToken")
                     callback(true)
                 }
             }
