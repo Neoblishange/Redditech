@@ -2,7 +2,6 @@ package com.epitech.soraeven.controller
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.icu.text.SimpleDateFormat
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +9,8 @@ import android.webkit.WebView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import com.epitech.soraeven.ImageLoading
 import com.epitech.soraeven.R
-import com.epitech.soraeven.RedditPostsMethods
 import com.epitech.soraeven.Subreddit
 import com.epitech.soraeven.model.PostList
 import java.sql.Date
@@ -49,6 +45,17 @@ class PostDataFilling constructor(context: Context): View(context){
             downVote.text = data?.name
 
             val originalVotes: Int = data?.numberOfUpVotes?.toInt()!!
+            var isExpanded: Boolean = false;
+
+            tvTitle.setOnClickListener {
+                isExpanded = if (!isExpanded) {
+                    tvTitle.maxLines = Int.MAX_VALUE
+                    true
+                } else {
+                    tvTitle.maxLines = 2
+                    false
+                }
+            }
 
             val postVote = data.likes
             if(postVote == "true"){
