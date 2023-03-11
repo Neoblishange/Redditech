@@ -11,14 +11,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.Toast
 import android.widget.ScrollView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.epitech.soraeven.*
 import com.epitech.soraeven.model.PostList
-import okhttp3.ResponseBody
 import com.epitech.soraeven.model.subreddit.SearchSubreddit
 import retrofit2.Call
 import retrofit2.Callback
@@ -101,6 +99,9 @@ class HomeActivity : AppCompatActivity(), SearchListener, PostsListener  {
         super.onResume()
         val uri: Uri? = intent.data
         if (uri != null && uri.toString().startsWith(redirectUri.toString())) {
+            if (uri.toString().contains("access_denied")) {
+                startActivity(Intent(this@HomeActivity, MainActivity::class.java))
+            }
             val code = uri.getQueryParameter("code")
             val authenticator = RedditAuthenticator(this)
             if (code != null) {
