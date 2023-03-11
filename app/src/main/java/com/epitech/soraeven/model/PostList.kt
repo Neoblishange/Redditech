@@ -29,7 +29,7 @@ data class PostList (
                 var preview: Preview,
                 var created_utc: Int,
                 var num_comments: Int,
-                var likes: String
+                var likes: String,
                 @SerializedName("media_embed")
                 var mediaEmbed: MediaEmbed?
             ){
