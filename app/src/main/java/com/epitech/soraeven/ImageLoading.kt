@@ -11,11 +11,13 @@ import com.bumptech.glide.request.target.Target
 
 class ImageLoading {
     fun simpleImageViewIntegration(context: Context, url: String?, imageView: ImageView){
-        val indexer = url?.indexOf("?")
-        val extractedImageURL = if (indexer!! >= 0) url.substring(0, indexer) else url
-        Glide.with(context)
-            .load(extractedImageURL)
-            .into(imageView)
+        if(!url.isNullOrEmpty()) {
+            val indexer = url?.indexOf("?")
+            val extractedImageURL = if (indexer!! >= 0) url.substring(0, indexer) else url
+            Glide.with(context)
+                .load(extractedImageURL)
+                .into(imageView)
+        }
     }
 
     fun customViewIntegration(context: Context, url: String?, view: View){
