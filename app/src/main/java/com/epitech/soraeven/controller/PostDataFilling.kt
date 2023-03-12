@@ -3,12 +3,15 @@ package com.epitech.soraeven.controller
 import android.annotation.SuppressLint
 import android.content.Context
 import android.icu.text.SimpleDateFormat
+import android.text.Html
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
+import androidx.core.text.htmlEncode
 import com.epitech.soraeven.ImageLoading
 import com.epitech.soraeven.R
 import com.epitech.soraeven.Subreddit
@@ -134,7 +137,14 @@ class PostDataFilling constructor(context: Context): View(context){
             if (data?.mediaEmbed?.content?.isNotEmpty() == true) {
                 val webView = WebView(context)
                 webView.settings.javaScriptEnabled = true
-                data.mediaEmbed!!.content?.let { webView.loadData(it, "text/html", "utf-8") }
+                data.mediaEmbed!!.content?.let {
+                    if(Html.fromHtml(it, Html.FROM_HTML_MODE_COMPACT).toString().isEmpty()) {
+                        webView.loadData(it, "text/html", "utf-8")
+                    }
+                    else {
+                        webView.loadData(Html.fromHtml(it, Html.FROM_HTML_MODE_COMPACT).toString(), "text/html", "utf-8")
+                    }
+                }
                 imageContainerLayout.addView(webView)
             } else if (ivThumbnail != null) {
                 if (data?.preview?.images?.get(0)?.source?.url != null) {
