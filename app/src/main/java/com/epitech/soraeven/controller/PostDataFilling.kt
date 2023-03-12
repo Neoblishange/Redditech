@@ -13,6 +13,8 @@ import com.epitech.soraeven.ImageLoading
 import com.epitech.soraeven.R
 import com.epitech.soraeven.Subreddit
 import com.epitech.soraeven.model.PostList
+import com.epitech.soraeven.model.profil.OtherUserProfile
+import com.epitech.soraeven.model.profil.ProfilUser
 import java.sql.Date
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -26,6 +28,7 @@ class PostDataFilling constructor(context: Context): View(context){
             val tvAuthor = view.findViewById<TextView>(R.id.author)
             val tvCreated_utc = view.findViewById<TextView>(R.id.created_utc)
             val tvTitle = view.findViewById<TextView>(R.id.title)
+            val ivSubredditProfile = view.findViewById<ImageView>(R.id.community_icon)
             val ivThumbnail = view.findViewById<ImageView>(R.id.thumbnail)
             val tvVotes = view.findViewById<TextView>(R.id.votes)
             val tvcommentCount = view.findViewById<TextView>(R.id.commentCount)
@@ -33,6 +36,18 @@ class PostDataFilling constructor(context: Context): View(context){
             val downVote = view.findViewById<Button>(R.id.downVote)
             val joinButton = view.findViewById<Button>(R.id.join)
             val imageContainerLayout = view.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.postBottomImg)
+
+            RedditClient.getOtherUserProfile(data?.authorFullname!!, object : Callback<OtherUserProfile?> {
+                override fun onResponse(call: Call<OtherUserProfile?>, response: Response<OtherUserProfile?>) {
+                    val responseData: OtherUserProfile? = response.body()
+                    val imageLoading = ImageLoading()
+                    imageLoading.simpleImageViewIntegration(view.context, responseData?.data?.subreddit?.icon_img, ivSubredditProfile)
+                }
+
+                override fun onFailure(call: Call<OtherUserProfile?>, t: Throwable) {
+
+                }
+            })
 
             tvSubreddit.text = data?.subredditNamePrefixed
             val authorTextView = "By : " + data?.authorFullname

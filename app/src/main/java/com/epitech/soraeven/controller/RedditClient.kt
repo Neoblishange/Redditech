@@ -5,6 +5,7 @@ import com.epitech.soraeven.MyApplication
 import com.epitech.soraeven.model.profil.UserSettings
 import com.epitech.soraeven.Subreddit
 import com.epitech.soraeven.model.PostList
+import com.epitech.soraeven.model.profil.OtherUserProfile
 import com.epitech.soraeven.model.profil.ProfilUser
 import com.epitech.soraeven.model.subreddit.DisplayInfoSubreddit
 import com.epitech.soraeven.model.subreddit.SearchSubreddit
@@ -83,6 +84,11 @@ object RedditClient {
             client.getSubredditProfile(subreddit)
                 ?.enqueue(callback)
         }
+    }
+
+    fun getOtherUserProfile(username: String, callback: Callback<OtherUserProfile?>){
+        client.getOtherUserProfile(username)
+            ?.enqueue(callback)
     }
 
     fun getSubredditPosts(subreddit: String?, filter: String, limit: Int, count: Int, after: String, callback: Callback<PostList?>){

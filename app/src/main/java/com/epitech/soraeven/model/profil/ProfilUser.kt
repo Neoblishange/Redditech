@@ -3,7 +3,8 @@ package com.epitech.soraeven.model.profil
 data class ProfilUser(
     var name: String,
     var subreddit: SubredditProfilUser,
-    var created_utc: Int
+    var created_utc: Int,
+    var icon_img: String
 )
 
 data class SubredditProfilUser(

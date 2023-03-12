@@ -5,6 +5,7 @@ import com.epitech.soraeven.model.AccessToken
 import com.epitech.soraeven.model.profil.UserSettings
 import okhttp3.ResponseBody
 import com.epitech.soraeven.model.PostList
+import com.epitech.soraeven.model.profil.OtherUserProfile
 import com.epitech.soraeven.model.profil.ProfilUser
 import com.epitech.soraeven.model.profil.SubredditProfilUser
 import com.epitech.soraeven.model.subreddit.DisplayInfoSubreddit
@@ -69,6 +70,12 @@ interface RedditInterface {
     fun getSubredditProfile(
         @Path("subreddit") subreddit: String,
     ): Call<DisplayInfoSubreddit?>?
+
+    @Headers("Accept: application/json")
+    @GET("user/{username}/about")
+    fun getOtherUserProfile(
+        @Path("username") username: String,
+    ): Call<OtherUserProfile?>?
 
     @Headers("Accept: application/json")
     @GET("{subreddit}/{filter}")
